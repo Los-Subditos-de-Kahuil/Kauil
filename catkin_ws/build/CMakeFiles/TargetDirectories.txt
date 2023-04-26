@@ -35,3 +35,11 @@
 /home/alejandro/Documentos/802/Kauil/catkin_ws/build/gtest/googlemock/gtest/CMakeFiles/list_install_components.dir
 /home/alejandro/Documentos/802/Kauil/catkin_ws/build/gtest/googlemock/gtest/CMakeFiles/gtest.dir
 /home/alejandro/Documentos/802/Kauil/catkin_ws/build/gtest/googlemock/gtest/CMakeFiles/rebuild_cache.dir
+/home/alejandro/Documentos/802/Kauil/catkin_ws/build/control/CMakeFiles/install/strip.dir
+/home/alejandro/Documentos/802/Kauil/catkin_ws/build/control/CMakeFiles/install/local.dir
+/home/alejandro/Documentos/802/Kauil/catkin_ws/build/control/CMakeFiles/test.dir
+/home/alejandro/Documentos/802/Kauil/catkin_ws/build/control/CMakeFiles/list_install_components.dir
+/home/alejandro/Documentos/802/Kauil/catkin_ws/build/control/CMakeFiles/edit_cache.dir
+/home/alejandro/Documentos/802/Kauil/catkin_ws/build/control/CMakeFiles/_catkin_empty_exported_target.dir
+/home/alejandro/Documentos/802/Kauil/catkin_ws/build/control/CMakeFiles/rebuild_cache.dir
+/home/alejandro/Documentos/802/Kauil/catkin_ws/build/control/CMakeFiles/install.dir
