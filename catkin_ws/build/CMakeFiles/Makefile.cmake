@@ -13,10 +13,13 @@ set(CMAKE_MAKEFILE_DEPENDS
   "catkin/catkin_generated/version/package.cmake"
   "catkin_generated/installspace/_setup_util.py"
   "catkin_generated/order_packages.cmake"
-  "control/catkin_generated/package.cmake"
+  "kauil_control/catkin_generated/package.cmake"
+  "kauil_movement/catkin_generated/package.cmake"
   "/home/alejandro/Documentos/802/Kauil/catkin_ws/src/CMakeLists.txt"
-  "/home/alejandro/Documentos/802/Kauil/catkin_ws/src/control/CMakeLists.txt"
-  "/home/alejandro/Documentos/802/Kauil/catkin_ws/src/control/package.xml"
+  "/home/alejandro/Documentos/802/Kauil/catkin_ws/src/kauil_control/CMakeLists.txt"
+  "/home/alejandro/Documentos/802/Kauil/catkin_ws/src/kauil_control/package.xml"
+  "/home/alejandro/Documentos/802/Kauil/catkin_ws/src/kauil_movement/CMakeLists.txt"
+  "/home/alejandro/Documentos/802/Kauil/catkin_ws/src/kauil_movement/package.xml"
   "/opt/ros/melodic/share/catkin/cmake/../package.xml"
   "/opt/ros/melodic/share/catkin/cmake/all.cmake"
   "/opt/ros/melodic/share/catkin/cmake/assert.cmake"
@@ -148,7 +151,8 @@ set(CMAKE_MAKEFILE_PRODUCTS
   "gtest/CMakeFiles/CMakeDirectoryInformation.cmake"
   "gtest/googlemock/CMakeFiles/CMakeDirectoryInformation.cmake"
   "gtest/googlemock/gtest/CMakeFiles/CMakeDirectoryInformation.cmake"
-  "control/CMakeFiles/CMakeDirectoryInformation.cmake"
+  "kauil_control/CMakeFiles/CMakeDirectoryInformation.cmake"
+  "kauil_movement/CMakeFiles/CMakeDirectoryInformation.cmake"
   )
 
 # Dependency information for all targets:
@@ -162,5 +166,5 @@ set(CMAKE_DEPEND_INFO_FILES
   "gtest/googlemock/CMakeFiles/gmock.dir/DependInfo.cmake"
   "gtest/googlemock/gtest/CMakeFiles/gtest_main.dir/DependInfo.cmake"
   "gtest/googlemock/gtest/CMakeFiles/gtest.dir/DependInfo.cmake"
-  "control/CMakeFiles/_catkin_empty_exported_target.dir/DependInfo.cmake"
+  "kauil_control/CMakeFiles/_catkin_empty_exported_target.dir/DependInfo.cmake"
   )

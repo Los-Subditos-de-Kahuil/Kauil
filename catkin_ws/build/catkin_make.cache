@@ -1,2 +1,2 @@
-control
+kauil_control:kauil_movement
 -DCATKIN_DEVEL_PREFIX=/home/alejandro/Documentos/802/Kauil/catkin_ws/devel -DCMAKE_INSTALL_PREFIX=/home/alejandro/Documentos/802/Kauil/catkin_ws/install -G Unix Makefiles

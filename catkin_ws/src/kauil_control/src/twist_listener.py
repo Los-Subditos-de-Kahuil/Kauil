@@ -1,4 +1,4 @@
-#! usr/bin/env python
+#! /usr/bin/env python
 """
 Listen the twist required and communicate movement values to the Arduino through the serial port.
 
@@ -22,12 +22,12 @@ T = 1.0 / FS
 
 # ------------------------ Functions -------------------------
 def v(x):
-    x = min(max(x, -1.0), 1.0)
-    return int(471(x) + 1457)
+    x = -min(max(x, -1.0), 1.0)
+    return int(471*(x) + 1432)
 
 def w(z):
     z = min(max(z, -1.0), 1.0)
-    return int(447(z) + 1433)
+    return int(447*(z) + 1393)
 
 
 # ------------------------- Class ----------------------------
@@ -43,14 +43,15 @@ class Converter():
         self.rate = rospy.Rate(FS)
 
         #! Check port!!!
-        self.arduino = serial.Serial(port='COM4', baudrate=9600, timeout=.1)
+        self.arduino = serial.Serial(port='/dev/ttyUSB0', baudrate=9600, timeout=1)
 
-    def callback(self, msg):
+    def callback_twist(self, msg):
         self.v = msg.linear.x
         self.w = msg.angular.z
 
     def arduino_write(self, message):
-        self.arduino.write(bytes(message, 'utf-8'))
+        print(message)
+        self.arduino.write(message.encode('utf-8'))
 
     def end_callback(self):
         """Callback on shutdown"""
@@ -68,8 +69,8 @@ class Converter():
             while not rospy.is_shutdown():
                 x = v(self.v)
                 z = w(self.w)
-                x_msg = "CH1:" + str(x)
-                z_msg = "CH2:" + str(z)
+                x_msg = "CH1:" + str(x) + "\n"
+                z_msg = "CH2:" + str(z) + "\n"
                 self.arduino_write(x_msg)
                 self.arduino_write(z_msg)
                 self.rate.sleep()
