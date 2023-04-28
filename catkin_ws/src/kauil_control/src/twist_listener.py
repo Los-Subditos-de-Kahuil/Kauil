@@ -12,6 +12,7 @@ Date: 2023/04/25
 # ------------------------- Imports --------------------------
 import rospy
 import serial
+import numpy as np
 
 from geometry_msgs.msg import Twist
 
@@ -22,10 +23,12 @@ T = 1.0 / FS
 
 # ------------------------ Functions -------------------------
 def v(x):
+    x *= (1.0/0.28)
     x = -min(max(x, -1.0), 1.0)
     return int(471*(x) + 1432)
 
 def w(z):
+    z *= (1.0 / (np.pi / 6))
     z = min(max(z, -1.0), 1.0)
     return int(447*(z) + 1393)
 
