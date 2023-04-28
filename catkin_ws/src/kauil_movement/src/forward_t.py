@@ -61,8 +61,8 @@ def run(verbose=False):
             if verbose:
                 print(str(tf - t0) + " seconds have passed, master.")
 
-            v = 0.0
-            w = -0.3
+            v = 1.0
+            w = 0.0
             vel_cmd.linear.x = v
             vel_cmd.angular.z = w
             pub.publish(vel_cmd)

@@ -23,11 +23,34 @@ T = 1.0 / FS
 
 # ------------------------ Functions -------------------------
 def v(x):
+    """
+    Transform a linear velocity value in m/s to the duration 
+    of the duty cycle of the Arduino counter.
+
+    Args:
+        x (float): linear velocity
+
+    Returns:
+        int: duty cycle length
+    """
+    #* Knowing max vel is 0.28 m/s transform to 1.0
     x *= (1.0/0.28)
     x = -min(max(x, -1.0), 1.0)
     return int(471*(x) + 1432)
 
 def w(z):
+    """
+    Transform an angular velocity value in rads/s to the
+    duration of the duty cycle of the Arduino counter
+
+    Args:
+        z (float): angular velocity
+
+    Returns:
+        int: duty cycle length
+    """
+    #* Knowing max ang vel is pi/6 rads/s
+    #* transform to 1.0
     z *= (1.0 / (np.pi / 6))
     z = min(max(z, -1.0), 1.0)
     return int(447*(z) + 1393)
@@ -35,7 +58,46 @@ def w(z):
 
 # ------------------------- Class ----------------------------
 class Converter():
+    """
+    Converter from standard movement measurements (m/s, rads/s)
+    to duty cycles required by arduino to control the motors.
+
+    ...
+
+    Attributes
+    ----------
+    v : float
+        linear velocity
+    
+    w : float
+        angular velocity
+
+    rate : object (rospy.Rate)
+        ros work rate
+
+    arduino : object (serial.Serial)
+        serial communicatior with arduino
+
+    Methods
+    -------
+    callback_twist(msg : object (ros.msg))
+        extracts linear and angular velocity from the ROS topic 
+        /cmd_vel msg
+
+    arduino_write(message : str)
+        message to write through serial to arduino
+    
+    end_callback()
+        actions to do on ROS close
+    
+    run()
+        prepares and sends the message of duty cycles to arduino
+
+    """
     def __init__(self):
+        """
+        Initialization of the class
+        """
         rospy.init_node("kauil_control_manager")
 
         #* Subscriber
@@ -45,15 +107,29 @@ class Converter():
 
         self.rate = rospy.Rate(FS)
 
-        #! Check port!!!
-        self.arduino = serial.Serial(port='/dev/ttyUSB0', baudrate=9600, timeout=1)
+        #! Check port and authorization!!!
+        self.arduino = serial.Serial(port='/dev/ttyUSB0', 
+                                     baudrate=9600, 
+                                     timeout=1)
 
     def callback_twist(self, msg):
+        """
+        extracts linear and angular velocity from the ROS topic 
+        /cmd_vel msg
+
+        Args:
+            msg (object (ros.msg)): message of twist
+        """
         self.v = msg.linear.x
         self.w = msg.angular.z
 
     def arduino_write(self, message):
-        print(message)
+        """
+        message to write through serial to arduino
+
+        Args:
+            message (str): message to be sent through serial
+        """
         self.arduino.write(message.encode('utf-8'))
 
     def end_callback(self):
@@ -68,6 +144,7 @@ class Converter():
         self.rate.sleep()
 
     def run(self):
+        """prepares and sends the message of duty cycles to arduino"""
         try:
             while not rospy.is_shutdown():
                 x = v(self.v)
