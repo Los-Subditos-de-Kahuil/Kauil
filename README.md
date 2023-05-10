@@ -1,8 +1,11 @@
 # Kauil
 Repository for rescue robot.
 
+# REPO OUTDATED WITH KAUIL!
+
 ## Index 
 - [Kauil](#kauil)
+- [REPO OUTDATED WITH KAUIL!](#repo-outdated-with-kauil)
   - [Index](#index)
   - [Folders](#folders)
   - [Installation](#installation)

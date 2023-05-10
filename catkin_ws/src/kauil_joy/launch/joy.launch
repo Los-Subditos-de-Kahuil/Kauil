@@ -9,4 +9,6 @@
   </node>
 
   <node name="joy_to_cmd_vel" pkg="kauil_joy" type="joy_to_cmd_vel.py" output="screen"/>
+  <node name="joy_to_cmd_cam_l" pkg="kauil_joy" type="joy_to_cmd_l_cam.py" output="screen"/>
+  <node name="joy_to_cmd_cam_r" pkg="kauil_joy" type="joy_to_cmd_r_cam.py" output="screen"/>  
 </launch>

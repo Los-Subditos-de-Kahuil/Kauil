@@ -131,8 +131,18 @@ endif()
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
   include("/home/alejandro/Documentos/802/Kauil/catkin_ws/build/gtest/cmake_install.cmake")
+  include("/home/alejandro/Documentos/802/Kauil/catkin_ws/build/joystick_drivers/joystick_drivers/cmake_install.cmake")
+  include("/home/alejandro/Documentos/802/Kauil/catkin_ws/build/urg/cmake_install.cmake")
+  include("/home/alejandro/Documentos/802/Kauil/catkin_ws/build/urg_c/cmake_install.cmake")
+  include("/home/alejandro/Documentos/802/Kauil/catkin_ws/build/hokuyo/cmake_install.cmake")
   include("/home/alejandro/Documentos/802/Kauil/catkin_ws/build/kauil_control/cmake_install.cmake")
   include("/home/alejandro/Documentos/802/Kauil/catkin_ws/build/kauil_movement/cmake_install.cmake")
+  include("/home/alejandro/Documentos/802/Kauil/catkin_ws/build/kauil_vision/cmake_install.cmake")
+  include("/home/alejandro/Documentos/802/Kauil/catkin_ws/build/joystick_drivers/joy/cmake_install.cmake")
+  include("/home/alejandro/Documentos/802/Kauil/catkin_ws/build/kauil_joy/cmake_install.cmake")
+  include("/home/alejandro/Documentos/802/Kauil/catkin_ws/build/laser_proc/cmake_install.cmake")
+  include("/home/alejandro/Documentos/802/Kauil/catkin_ws/build/joystick_drivers/spacenav_node/cmake_install.cmake")
+  include("/home/alejandro/Documentos/802/Kauil/catkin_ws/build/urg_node/cmake_install.cmake")
 
 endif()
 

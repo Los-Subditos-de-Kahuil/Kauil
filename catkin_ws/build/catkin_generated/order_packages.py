@@ -2,4 +2,4 @@
 source_root_dir = '/home/alejandro/Documentos/802/Kauil/catkin_ws/src'
 whitelisted_packages = ''.split(';') if '' != '' else []
 blacklisted_packages = ''.split(';') if '' != '' else []
-underlay_workspaces = '/opt/ros/melodic'.split(';') if '/opt/ros/melodic' != '' else []
+underlay_workspaces = '/home/alejandro/Documentos/802/Kauil/catkin_ws/devel_isolated/urg;/home/alejandro/Documentos/802/Kauil/catkin_ws/devel_isolated/kauil_vision;/home/alejandro/Documentos/802/Kauil/catkin_ws/devel_isolated/kauil_movement;/home/alejandro/Documentos/802/Kauil/catkin_ws/devel_isolated/kauil_control;/home/alejandro/Documentos/802/Kauil/catkin_ws/devel;/home/alejandro/Documentos/802/Gothmog/catkin_ws/devel;/opt/ros/melodic'.split(';') if '/home/alejandro/Documentos/802/Kauil/catkin_ws/devel_isolated/urg;/home/alejandro/Documentos/802/Kauil/catkin_ws/devel_isolated/kauil_vision;/home/alejandro/Documentos/802/Kauil/catkin_ws/devel_isolated/kauil_movement;/home/alejandro/Documentos/802/Kauil/catkin_ws/devel_isolated/kauil_control;/home/alejandro/Documentos/802/Kauil/catkin_ws/devel;/home/alejandro/Documentos/802/Gothmog/catkin_ws/devel;/opt/ros/melodic' != '' else []

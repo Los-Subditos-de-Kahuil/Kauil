@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<launch>
+  <node name="l_camera_position_listener" pkg="kauil_vision" type="l_camera_position_listener.py"/>
+  <node name="r_camera_position_listener" pkg="kauil_vision" type="r_camera_position_listener.py"/>
+</launch>

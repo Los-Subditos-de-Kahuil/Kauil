@@ -1,2 +1,2 @@
-kauil_control:kauil_movement
+hokuyo:joystick_drivers/joy:joystick_drivers/joystick_drivers:joystick_drivers/spacenav_node:kauil_control:kauil_joy:kauil_movement:kauil_vision:laser_proc:urg:urg_c:urg_node
 -DCATKIN_DEVEL_PREFIX=/home/alejandro/Documentos/802/Kauil/catkin_ws/devel -DCMAKE_INSTALL_PREFIX=/home/alejandro/Documentos/802/Kauil/catkin_ws/install -G Unix Makefiles

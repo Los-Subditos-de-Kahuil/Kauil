@@ -1,0 +1,8 @@
+prefix=/home/alejandro/Documentos/802/Kauil/catkin_ws/devel_isolated/kauil_vision
+
+Name: kauil_vision
+Description: Description of kauil_vision
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

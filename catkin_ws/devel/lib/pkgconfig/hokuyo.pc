@@ -1,0 +1,8 @@
+prefix=/home/alejandro/Documentos/802/Kauil/catkin_ws/devel
+
+Name: hokuyo
+Description: Description of hokuyo
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 
