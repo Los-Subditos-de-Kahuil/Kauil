@@ -11,7 +11,7 @@ Date: 2023/04/27
 """
 # ------------------------- Imports --------------------------
 import rospy
-import cv2 as cv
+import cv2
 
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge
@@ -32,28 +32,27 @@ class ImagePublisher():
         self.bridge = CvBridge()
 
         #! Check index
-        self.rightCam = cv2.VideoCapture(0)
-        self.leftCam = cv2.VideoCapture(1)
+        self.rightCam = cv2.VideoCapture("http://admin:@192.168.1.101/videostream.cgi?[?rate=6]")
+        self.leftCam = cv2.VideoCapture("http://admin:@192.168.1.102/videostream.cgi?[?rate=6]")
         
-        self.rightPublisher = rospy.Publisher("/right_camera")
-        self.leftPublisher = rospy.Publisher("/left_camera")
+        self.rightPublisher = rospy.Publisher("/right_camera", Image, queue_size=1)
+        self.leftPublisher = rospy.Publisher("/left_camera", Image, queue_size=1)
 
 
         self.rate = rospy.Rate(FS)
 
-    def run(self):
+    def run(self, verbose=False):
         try:
             while not rospy.is_shutdown():
                 retR, self.imageRight = self.rightCam.read()
                 retL, self.imageLeft = self.leftCam.read()
-                if not retR:
+                if not retR and verbose:
                     print("Failed to read right camera")
-                if not retL:
+                if not retL and verbose:
                     print("Fialed to read left camera")
 
-                self.rightPublisher.publish(self.bridge.cv2_to_imgmsg(self.imageRight))
-                self.leftPublisher.publish(self.bridge.cv2_to_imgmsg(self.imageLeft))
-
+		self.rightPublisher.publish(self.bridge.cv2_to_imgmsg(self.imageRight, 'bgr8'))
+		self.leftPublisher.publish(self.bridge.cv2_to_imgmsg(self.imageLeft, 'bgr8'))
                 self.rate.sleep()
         
         except rospy.exceptions.ROSInterruptException:
@@ -61,4 +60,5 @@ class ImagePublisher():
 
 if __name__ == "__main__":
     imgPub = ImagePublisher()
-    imgPub.run()
+    verbose = True
+    imgPub.run(verbose=verbose)
