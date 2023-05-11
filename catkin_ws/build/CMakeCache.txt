@@ -424,10 +424,22 @@ kauil_joy_BINARY_DIR:STATIC=/home/alejandro/Documentos/802/Kauil/catkin_ws/build
 kauil_joy_SOURCE_DIR:STATIC=/home/alejandro/Documentos/802/Kauil/catkin_ws/src/kauil_joy
 
 //Value Computed by CMake
+kauil_mapping_BINARY_DIR:STATIC=/home/alejandro/Documentos/802/Kauil/catkin_ws/build/kauil_mapping
+
+//Value Computed by CMake
+kauil_mapping_SOURCE_DIR:STATIC=/home/alejandro/Documentos/802/Kauil/catkin_ws/src/kauil_mapping
+
+//Value Computed by CMake
 kauil_movement_BINARY_DIR:STATIC=/home/alejandro/Documentos/802/Kauil/catkin_ws/build/kauil_movement
 
 //Value Computed by CMake
 kauil_movement_SOURCE_DIR:STATIC=/home/alejandro/Documentos/802/Kauil/catkin_ws/src/kauil_movement
+
+//Value Computed by CMake
+kauil_reactive_navigation_BINARY_DIR:STATIC=/home/alejandro/Documentos/802/Kauil/catkin_ws/build/kauil_reactive_navigation
+
+//Value Computed by CMake
+kauil_reactive_navigation_SOURCE_DIR:STATIC=/home/alejandro/Documentos/802/Kauil/catkin_ws/src/kauil_reactive_navigation
 
 //Value Computed by CMake
 kauil_vision_BINARY_DIR:STATIC=/home/alejandro/Documentos/802/Kauil/catkin_ws/build/kauil_vision
@@ -689,7 +701,7 @@ CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_NM
 CMAKE_NM-ADVANCED:INTERNAL=1
 //number of local generators
-CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=16
+CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=18
 //ADVANCED property for variable: CMAKE_OBJCOPY
 CMAKE_OBJCOPY-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_OBJDUMP

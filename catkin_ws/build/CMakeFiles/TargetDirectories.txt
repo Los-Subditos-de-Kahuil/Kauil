@@ -84,6 +84,13 @@
 /home/alejandro/Documentos/802/Kauil/catkin_ws/build/kauil_control/CMakeFiles/install/local.dir
 /home/alejandro/Documentos/802/Kauil/catkin_ws/build/kauil_control/CMakeFiles/rebuild_cache.dir
 /home/alejandro/Documentos/802/Kauil/catkin_ws/build/kauil_control/CMakeFiles/install.dir
+/home/alejandro/Documentos/802/Kauil/catkin_ws/build/kauil_mapping/CMakeFiles/install/strip.dir
+/home/alejandro/Documentos/802/Kauil/catkin_ws/build/kauil_mapping/CMakeFiles/edit_cache.dir
+/home/alejandro/Documentos/802/Kauil/catkin_ws/build/kauil_mapping/CMakeFiles/list_install_components.dir
+/home/alejandro/Documentos/802/Kauil/catkin_ws/build/kauil_mapping/CMakeFiles/test.dir
+/home/alejandro/Documentos/802/Kauil/catkin_ws/build/kauil_mapping/CMakeFiles/install/local.dir
+/home/alejandro/Documentos/802/Kauil/catkin_ws/build/kauil_mapping/CMakeFiles/rebuild_cache.dir
+/home/alejandro/Documentos/802/Kauil/catkin_ws/build/kauil_mapping/CMakeFiles/install.dir
 /home/alejandro/Documentos/802/Kauil/catkin_ws/build/kauil_movement/CMakeFiles/install/strip.dir
 /home/alejandro/Documentos/802/Kauil/catkin_ws/build/kauil_movement/CMakeFiles/edit_cache.dir
 /home/alejandro/Documentos/802/Kauil/catkin_ws/build/kauil_movement/CMakeFiles/list_install_components.dir
@@ -91,6 +98,13 @@
 /home/alejandro/Documentos/802/Kauil/catkin_ws/build/kauil_movement/CMakeFiles/install/local.dir
 /home/alejandro/Documentos/802/Kauil/catkin_ws/build/kauil_movement/CMakeFiles/rebuild_cache.dir
 /home/alejandro/Documentos/802/Kauil/catkin_ws/build/kauil_movement/CMakeFiles/install.dir
+/home/alejandro/Documentos/802/Kauil/catkin_ws/build/kauil_reactive_navigation/CMakeFiles/install/strip.dir
+/home/alejandro/Documentos/802/Kauil/catkin_ws/build/kauil_reactive_navigation/CMakeFiles/edit_cache.dir
+/home/alejandro/Documentos/802/Kauil/catkin_ws/build/kauil_reactive_navigation/CMakeFiles/list_install_components.dir
+/home/alejandro/Documentos/802/Kauil/catkin_ws/build/kauil_reactive_navigation/CMakeFiles/test.dir
+/home/alejandro/Documentos/802/Kauil/catkin_ws/build/kauil_reactive_navigation/CMakeFiles/install/local.dir
+/home/alejandro/Documentos/802/Kauil/catkin_ws/build/kauil_reactive_navigation/CMakeFiles/rebuild_cache.dir
+/home/alejandro/Documentos/802/Kauil/catkin_ws/build/kauil_reactive_navigation/CMakeFiles/install.dir
 /home/alejandro/Documentos/802/Kauil/catkin_ws/build/kauil_vision/CMakeFiles/install/strip.dir
 /home/alejandro/Documentos/802/Kauil/catkin_ws/build/kauil_vision/CMakeFiles/edit_cache.dir
 /home/alejandro/Documentos/802/Kauil/catkin_ws/build/kauil_vision/CMakeFiles/list_install_components.dir

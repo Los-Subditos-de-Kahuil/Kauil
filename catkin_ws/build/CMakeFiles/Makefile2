@@ -1045,6 +1045,24 @@ kauil_control/preinstall:
 .PHONY : kauil_control/preinstall
 
 #=============================================================================
+# Directory level rules for directory kauil_mapping
+
+# Convenience name for "all" pass in the directory.
+kauil_mapping/all:
+
+.PHONY : kauil_mapping/all
+
+# Convenience name for "clean" pass in the directory.
+kauil_mapping/clean:
+
+.PHONY : kauil_mapping/clean
+
+# Convenience name for "preinstall" pass in the directory.
+kauil_mapping/preinstall:
+
+.PHONY : kauil_mapping/preinstall
+
+#=============================================================================
 # Directory level rules for directory kauil_movement
 
 # Convenience name for "all" pass in the directory.
@@ -1061,6 +1079,24 @@ kauil_movement/clean:
 kauil_movement/preinstall:
 
 .PHONY : kauil_movement/preinstall
+
+#=============================================================================
+# Directory level rules for directory kauil_reactive_navigation
+
+# Convenience name for "all" pass in the directory.
+kauil_reactive_navigation/all:
+
+.PHONY : kauil_reactive_navigation/all
+
+# Convenience name for "clean" pass in the directory.
+kauil_reactive_navigation/clean:
+
+.PHONY : kauil_reactive_navigation/clean
+
+# Convenience name for "preinstall" pass in the directory.
+kauil_reactive_navigation/preinstall:
+
+.PHONY : kauil_reactive_navigation/preinstall
 
 #=============================================================================
 # Directory level rules for directory kauil_vision
