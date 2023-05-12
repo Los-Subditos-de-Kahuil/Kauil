@@ -17,6 +17,7 @@ Repository for rescue robot.
   - [Index](#index)
   - [Folders](#folders)
   - [Installation](#installation)
+  - [Requierements](#requierements)
   - [Use](#use)
   - [Authors](#authors)
   - [Project status](#project-status)
@@ -33,7 +34,18 @@ Repository for rescue robot.
 </div>
 
 ## Installation
-Download the Arduino files into the Arduinos and cone the repository into Kauil and pass the packages into Kauil's `~/catkin_ws/src` and in `~/catkin_ws` run `catkin_make`.
+Download the Arduino files into the Arduinos and clone the repository into Kauil. Then pass the packages into Kauil's `~/catkin_ws/src` and in `~/catkin_ws` run `catkin_make`.
+
+<div align ="right">
+<a href="#kauil">Go to top</a>
+</div>
+
+## Requierements
+- Ubuntu 18.04
+- ROS melodic
+- Python 2.6
+  - numpy
+    - 
 
 <div align ="right">
 <a href="#kauil">Go to top</a>
@@ -41,6 +53,8 @@ Download the Arduino files into the Arduinos and cone the repository into Kauil 
 
 ## Use
 1. Connect all batteries to Kauil.
+2. In `/catkin_ws` run `source devel/setup.bash`
+3. Launch the files corresponding to the usage you want to give to kauil. (The packages are described in the `README.md` file inside each).
 
 ## Authors
 - [Nancy García Jiménez](https://github.com/nansnova)
