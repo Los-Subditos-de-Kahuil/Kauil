@@ -1,4 +1,14 @@
 #!/usr/bin/env python
+"""
+Move Kauil in a straight line for X seconds
+
+Authors:
+    - Alejandro Dominguez Lugo      (A01378028)
+    - Diego Alberto Anaya Marquez   (A01379375)
+    - Nancy Lesly Garcia Jimenez    (A01378043)
+
+Date: 2023/04/09
+"""
 # ------------------------- Imports --------------------------
 import rospy
 from geometry_msgs.msg import Twist
@@ -27,7 +37,7 @@ rospy.on_shutdown(end_callback)
 
 
 def run(verbose=False):
-    """Move Gothmog in a straight line for 10 seconds
+    """Move Kauil in a straight line for X seconds
 
     Args:
         verbose (bool, optional): To be talkative. Defaults to False.

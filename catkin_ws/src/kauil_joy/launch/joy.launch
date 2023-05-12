@@ -1,11 +1,25 @@
 <?xml version="1.0"?>
-<launch>
-  <arg name="joy_dev" default="/dev/input/js0" />
+<!--
+Launch file for the joy node and the nodes that require it for commands.
+- joy_node: Reads joystick input and publishes it to the /joy topic.
+- joy_to_cmd_vel: Reads the /joy topic and publishes to the /cmd_vel topic.
+- joy_to_cmd_cam_l: Reads the /joy topic and publishes to the /left_camera/cmd topic.
+- joy_to_cmd_cam_r: Reads the /joy topic and publishes to the /right_camera/cmd topic.
 
-  <node name="joy" pkg="joy" type="joy_node" output="screen" >
-    <param name="dev" value="$(arg joy_dev)" />
-    <!-- <param name="autorepeat_rate" value="10" />
-    <param name="coalesce_interval" value="0.01" /> -->
+Authors:
+  - Alejandro Domínguez Lugo    (A01378028)
+  - Diego Alberto Anaya Márquez (A01379375)
+  - Nancy Leslye García Jiménez (A01378043)
+
+Date: 2023/05/09
+-->
+<launch>
+  <arg name="joy_dev" default="/dev/input/js0"/>
+
+  <node name="joy" pkg="joy" type="joy_node" output="screen">
+    <param name="dev" value="$(arg joy_dev)"/>
+    <!-- <param name="autorepeat_rate" value="10"/> -->
+    <!-- <param name="coalesce_interval" value="0.01"/> -->
   </node>
 
   <node name="joy_to_cmd_vel" pkg="kauil_joy" type="joy_to_cmd_vel.py" output="screen"/>

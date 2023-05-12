@@ -3,6 +3,12 @@
 and the odometry data.
 
 Author: kjartan@tec.mx (Kjartan Halvorsen) with help from github copilot
+Adapted by:
+    - Alejandro Dominguez Lugo      (A01378028) 
+    - Diego Alberto Anaya Marquez   (A01379375)
+    - Nancy Lesly Garcia Jimenez    (A01378043)
+
+Date: 2021/05/10
 
 Notes.
 1) The scan data give information about free space as well as obstacles. Each ray in the scan will cover a number
@@ -42,9 +48,7 @@ class Mapper:
         map_resolution : float
             Resolution of map in meter per pixel
         """
-        self.scan_listener = rospy.Subscriber(
-            "/scan", LaserScan, self.scan_callback
-        )
+        self.scan_listener = rospy.Subscriber("/scan", LaserScan, self.scan_callback)
         self.odom_listener = rospy.Subscriber(
             "/fake_odom", Odometry, self.odom_callback
         )
@@ -232,7 +236,7 @@ def scan_to_map_coordinates(scan, odom, origin):
     >>> np.allclose(orig, (6.0, 3.0))
     True
     >>> np.allclose(xy,[(7.0, 3.0), (6.0, 2.0), (5.0, 3.0)])
-    True    
+    True
     >>>
     """
 
@@ -250,10 +254,9 @@ def scan_to_map_coordinates(scan, odom, origin):
     scan_endpoints = []
     for i in range(len(scan.ranges)):
         x_r, y_r = polar_to_cartesian(
-                                    scan.ranges[i], 
-                                    scan.angle_min + i * scan.angle_increment
-                                    )
-        
+            scan.ranges[i], scan.angle_min + i * scan.angle_increment
+        )
+
         l_r = np.array([x_r, y_r, 1])
         l_m = np.dot(TT, l_r)
         scan_endpoints.append((l_m[0], l_m[1]))

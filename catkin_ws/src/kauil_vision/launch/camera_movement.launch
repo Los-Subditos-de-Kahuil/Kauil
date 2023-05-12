@@ -1,4 +1,14 @@
 <?xml version="1.0"?>
+<!--
+Launch file for the camera_position_listener nodes.
+
+Authors:
+  - Alejandro Domínguez Lugo    (A01378028)
+  - Diego Alberto Anaya Márquez (A01379375)
+  - Nancy Leslye García Jiménez (A01378043)
+
+Date: 2023/05/09
+-->
 <launch>
   <node name="l_camera_position_listener" pkg="kauil_vision" type="l_camera_position_listener.py"/>
   <node name="r_camera_position_listener" pkg="kauil_vision" type="r_camera_position_listener.py"/>
