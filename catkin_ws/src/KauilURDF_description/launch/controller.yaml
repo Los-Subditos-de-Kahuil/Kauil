@@ -5,11 +5,11 @@ KauilURDF_controller:
     publish_rate: 50
 
   # Position Controllers --------------------------------------
-  Revolute 19_position_controller:
+  r_wheel_joint_position_controller:
     type: effort_controllers/JointPositionController
-    joint: Revolute 19
+    joint: r_wheel_joint
     pid: {p: 100.0, i: 0.01, d: 10.0}
-  Revolute 20_position_controller:
+  l_wheel_joint_position_controller:
     type: effort_controllers/JointPositionController
-    joint: Revolute 20
+    joint: l_wheel_joint
     pid: {p: 100.0, i: 0.01, d: 10.0}

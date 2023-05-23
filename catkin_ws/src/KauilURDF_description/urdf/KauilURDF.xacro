@@ -26,7 +26,7 @@
   </collision>
 </link>
 
-<link name="camera_kauil">
+<link name="camera_kauil_1">
   <inertial>
     <origin xyz="0.0010451780985420312 -0.007974356683217387 0.03683202882533165" rpy="0 0 0"/>
     <mass value="2.8747629426179175"/>
@@ -47,7 +47,7 @@
   </collision>
 </link>
 
-<link name="hokuyo_kauil">
+<link name="hokuyo_kauil_1">
   <inertial>
     <origin xyz="-3.662814409416404e-14 -2.1089675922292273e-07 0.041767094902394775" rpy="0 0 0"/>
     <mass value="2.7843842894799833"/>
@@ -68,72 +68,58 @@
   </collision>
 </link>
 
-<link name="r_wheel">
+<link name="r_wheel_1">
   <inertial>
-    <origin xyz="-0.012500004507787987 7.378843355776432e-08 1.8692973074996289e-07" rpy="0 0 0"/>
-    <mass value="0.25977904578296684"/>
-    <inertia ixx="0.000173" iyy="0.000101" izz="0.000101" ixy="0.0" iyz="-0.0" ixz="-0.0"/>
+    <origin xyz="0.0054999654570002665 -0.008227290947267998 -0.004494430926877367" rpy="0 0 0"/>
+    <mass value="4.059067570781877"/>
+    <inertia ixx="0.016884" iyy="0.009874" izz="0.009874" ixy="0.0" iyz="0.0" ixz="-0.0"/>
   </inertial>
-  <visual>
-    <origin xyz="-0.26 -0.040001 -0.038107" rpy="0 0 0"/>
-    <geometry>
-      <mesh filename="package://KauilURDF_description/meshes/Polea_v1_1.stl" scale="0.001 0.001 0.001"/>
-    </geometry>
-    <material name="silver"/>
-  </visual>
   <collision>
     <origin xyz="-0.26 -0.040001 -0.038107" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://KauilURDF_description/meshes/Polea_v1_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://KauilURDF_description/meshes/r_wheel_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
-<link name="l_wheel">
+<link name="l_wheel_1">
   <inertial>
-    <origin xyz="0.01249999546630634 7.211427126285752e-08 1.8723679501980728e-07" rpy="0 0 0"/>
-    <mass value="0.25977914566563737"/>
-    <inertia ixx="0.000173" iyy="0.000101" izz="0.000101" ixy="-0.0" iyz="0.0" ixz="-0.0"/>
+    <origin xyz="0.031250024230748685 4.0011892479818734e-08 1.822203452780946e-07" rpy="0 0 0"/>
+    <mass value="4.059067721177565"/>
+    <inertia ixx="0.016884" iyy="0.009874" izz="0.009874" ixy="0.0" iyz="0.0" ixz="-0.0"/>
   </inertial>
-  <visual>
-    <origin xyz="0.26 -0.040001 -0.038107" rpy="0 0 0"/>
-    <geometry>
-      <mesh filename="package://KauilURDF_description/meshes/Component121_1.stl" scale="0.001 0.001 0.001"/>
-    </geometry>
-    <material name="silver"/>
-  </visual>
   <collision>
     <origin xyz="0.26 -0.040001 -0.038107" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://KauilURDF_description/meshes/Component121_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://KauilURDF_description/meshes/l_wheel_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
-<joint name="Rigid_hokuyo" type="fixed">
+<joint name="camera_joint" type="fixed">
   <origin xyz="-0.00546 0.37938 0.23895" rpy="0 0 0"/>
   <parent link="base_link"/>
-  <child link="hokuyo_kauil"/>
+  <child link="camera_kauil_1"/>
 </joint>
 
-<joint name="Rigid_camera" type="fixed">
+<joint name="hokuyo_joint" type="fixed">
   <origin xyz="0.000825 0.351848 0.35095" rpy="0 0 0"/>
   <parent link="base_link"/>
-  <child link="camera_kauil"/>
+  <child link="hokuyo_kauil_1"/>
 </joint>
 
-<joint name="Revolute_L" type="continuous">
+<joint name="r_wheel_joint" type="continuous">
   <origin xyz="0.26 0.040001 0.038107" rpy="0 0 0"/>
   <parent link="base_link"/>
-  <child link="l_wheel"/>
+  <child link="r_wheel_1"/>
   <axis xyz="-1.0 0.0 0.0"/>
 </joint>
 
-<joint name="Revolute_R" type="continuous">
+<joint name="l_wheel_joint" type="continuous">
   <origin xyz="-0.26 0.040001 0.038107" rpy="0 0 0"/>
   <parent link="base_link"/>
-  <child link="r_wheel"/>
-  <axis xyz="1.0 0.0 0.0"/>
+  <child link="l_wheel_1"/>
+  <axis xyz="-1.0 0.0 0.0"/>
 </joint>
 
 <gazebo>
@@ -141,13 +127,13 @@
     <robotNamespace />
     <alwaysOn>true</alwaysOn>
     <use_sim_time>true</use_sim_time>
-    <updateRate>100</updateRate>
+    <updateRate>500</updateRate>
     <legacyMode>false</legacyMode>
-    <leftJoint>Revolute_L</leftJoint>
-    <rightJoint>Revolute_R</rightJoint>
+    <leftJoint>l_wheel_joint</leftJoint>
+    <rightJoint>r_wheel_joint</rightJoint>
     <wheelSeparation>0.5380</wheelSeparation>
     <wheelDiameter>0.19</wheelDiameter>
-    <torque>100</torque>
+    <torque>500</torque>
     <commandTopic>cmd_vel</commandTopic>
     <odometryTopic>odom</odometryTopic>
     <odometryFrame>odom</odometryFrame>
@@ -156,7 +142,7 @@
     <publishWheelJointState>false</publishWheelJointState>
     <rosDebugLevel>na</rosDebugLevel>
     <wheelAcceleration>0</wheelAcceleration>
-    <wheelTorque>150</wheelTorque>
+    <wheelTorque>500</wheelTorque>
     <odometrySource>world</odometrySource>
     <publishTf>1</publishTf>
     <publishOdomTF>true</publishOdomTF>
@@ -164,7 +150,7 @@
 </gazebo>
 
 <!-- hokuyo -->
-<gazebo reference="hokuyo_kauil">
+<gazebo reference="hokuyo_kauil_1">
   <sensor type="gpu_ray" name="head_hokuyo_sensor">
     <pose>0 0 0 0 0 0</pose>
     <visualize>false</visualize>
@@ -202,7 +188,7 @@
 </gazebo>
 
 <!-- camera -->
-<gazebo reference="camera_kauil">
+<gazebo reference="camera_kauil_1">
   <sensor type="camera" name="camera1">
     <update_rate>30.0</update_rate>
     <use_sim_time>true</use_sim_time>
