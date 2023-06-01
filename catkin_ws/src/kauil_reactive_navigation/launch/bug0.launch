@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Launch Gazebo, Rviz and required nodes
+
+Authors:
+  - Alejandro Domínguez Lugo    (A01378028)
+  - Diego Alberto Anaya Márquez (A01379375)
+  - Nancy Leslye García Jiménez (A01378043)
+
+Date: 2023/05/09
+-->
+<launch>
+  <arg name="rvizconfig" default="$(find kinematics_MR)/rviz/config.rviz" />
+  
+  <arg name="goal_x" default="3.0"/> <!-- Hardcoded for current map -->
+  <arg name="goal_y" default="15.0"/> <!-- Hardcoded for current map -->
+  <arg name="verbose" default=""/>
+  <include file="$(find puzzlebot_world)/launch/puzzlebot_obstacle_world.launch"/>
+
+  <!-- Run Rviz -->
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" />
+
+  <node pkg="odometry" type="gazebo_pose.py" name="ReferenceOdometryPublisher"/>
+  <node name="puzzlebot_gazebo_pose" pkg="kinematics_MR" type="pose.py"/>
+  <node name="Bug0" pkg="reactive_nav" type="bug0.py" args="--goal $(arg goal_x) $(arg goal_y) $(arg verbose)"/>
+</launch>

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Follow the Bug0 Reactive Navigation Algorithm to reach a goal.
+Follow the Bug20 Reactive Navigation Algorithm (designed by the team mentioned below) to reach a goal.
 
 Authors:
     - Alejandro Dominguez Lugo      (A01378028)
@@ -16,23 +16,25 @@ from nav_msgs.msg import Odometry
 from geometry_msgs.msg import Twist
 from sensor_msgs.msg import LaserScan
 from tf.transformations import euler_from_quaternion
-from reactive_nav.srv import *
+from kauil_reactive_navigation.srv import *
+from std_msgs.msg import String
 
 # * Constants for State Machine
 DIST_THRESHOLD = 0.10  # Distance threshold to goal
-PUZZLEBOT_SIZE = 0.2  # Size of the robot (from xacro)
-OBSTACLE_THRESHOLD = 1.0  # Distance threshold to obstacle
+OBSTACLE_THRESHOLD = 0.50  # Distance threshold to obstacle
+PUZZLEBOT_SIZE = 0.89  # Size of the robot (from xacro)
 VISION_ANGLE = np.arctan((PUZZLEBOT_SIZE / 2.0) / OBSTACLE_THRESHOLD)  # Vision angle
 
 # * Constants for go to goal
-V_MAX = 0.4  # Max linear velocity
-ALPHA = 4  # For calculating linear velocity (soft curve)
-KW = 0.5  # Angular velocity P controller constant
+V_MAX = 0.28  # Max linear velocity
+ALPHA = 2.0  # For calculating linear velocity
+KW = 0.14  # Angular velocity P controller constant
 
 # * Constants for obstacle avoidance
-P_ORIENTATION = 10.0  # P controller constant for orientation
-P_V = 0.2  # P controller constant for linear velocity
-W_MAX = 1.0  # Max angular velocity
+P_ORIENTATION = 1.0  # P controller constant for orientation
+P_V = 0.1  # P controller constant for linear velocity
+W_MAX = 0.1  # Max angular velocity
+DISTANCE_TO_LINE_TH = 0.05  # Distance threshold to main line
 ANGLE_THRESHOLD = np.deg2rad(5)  # Angle threshold to obstacle
 DESIRED_WALL_DISTANCE = PUZZLEBOT_SIZE * 1.5  # Desired distance to wall
 MAX_WALL_DISTANCE = 3.0  # Max distance to wall
@@ -46,50 +48,54 @@ MAX_WALL_DISTANCE = 3.0  # Max distance to wall
 # ---------------------
 
 
-class BugAlgorithm:
+class Bug20Algorithm:
     """
-    # Bug0 Algorithm
-    This node implements the Bug0 Reactive Navigation Algorithm.
+    # Bug20 Algorithm
+    This node implements the Bug20 Reactive Navigation Algorithm (designed by the team mentioned above).
 
     ## Attributes
-    - goal_x (`float`): x coordinate of the goal.
-    - goal_y (`float`): y coordinate of the goal.
-    - verbose (`bool`): verbosity of the node.
-    - x (`float`): x coordinate of the robot.
-    - y (`float`): y coordinate of the robot.
-    - theta (`float`): orientation (theta) of the robot.
-    - rate (`rospy.Rate`): rate of the node.
-    - scan (`LaserScan`): laser scan of the LiDAR.
-    - angles (`np.array`): angles of the LiDAR scan.
-    - state (`str`): state of the state machine.
-    - cmd_vel_pub (`rospy.Publisher`): publisher for the cmd_vel topic.
+    - goal_x (`float`): x coordinate of the goal
+    - goal_y (`float`): y coordinate of the goal
+    - verbose (`bool`): verbosity of the program
+    - x (`float`): current x coordinate of the robot
+    - y (`float`): current y coordinate of the robot
+    - theta (`float`): current theta coordinate of the robot
+    - scan (`LaserScan`): current LiDAR scan
+    - angles (`numpy.ndarray`): angles of the LiDAR scan
+    - state (`str`): current state of the state machine
+    - a (`float`): a constant for the line equation
+    - b (`float`): b constant for the line equation
+    - c (`float`): c constant for the line equation
+    - closest_distance (`float`): closest distance travelled in the line
+    - cmd_vel_pub (`rospy.Publisher`): publisher for the cmd_vel topic
 
     ## Methods
-    - __init__(): initializes the node (with arguments), publishers and subscribers, and sets the initial values.
-    - odom_callback(msg): callback for current x, y, and theta state.
-    - scan_callback(msg): callback for LiDAR scan.
-    - end_callback(): if node dies, for instance, by keyboard interrupt, we stop the robot.
-    - get_scan_between_angles(start_angle, end_angle): returns the scan between two angles.
-    - distance_to_goal(): returns the linear distance to the goal.
-    - orientation_error(): returns the orientation error to the goal.
-    - go_to_goal(): implements the go to goal behavior.
-    - calculate_w(r_1, theta_1, r_2, theta_2, beta, v): calculates the angular velocity to follow the wall.
-    - go_around_obstacle(beta): implements the go around obstacle behavior.
-    - run(): runs the node.
-
-    ## Publishers
-    - `/cmd_vel`: publishes the linear and angular velocity to control the robot.
+    - __init__(): Initializes the node (with arguments), publishers and subscribers, and sets the initial values.
+    - odom_callback(msg): Callback for current x, y, and theta position
+    - scan_callback(msg): Callback for LiDAR scan
+    - end_callback(): Callback for when the node is shutdown
+    - get_line(): Calculates the line equation for the goal and the robot
+    - get_scan_between_angles(start_angle, end_angle): Gets the scan between two angles
+    - distance_to_goal(): Calculates the linear distance to the goal
+    - orientation_error(): Calculates the orientation error to the goal
+    - go_to_goal(): Implements the go to goal state
+    - calculate_w(r_1, theta_1, r_2, theta_2, beta, v): Calculates the angular velocity to follow the wall
+    - go_around_obstacle(beta): Implements the go around obstacle state
+    - distance_to_line(): Calculates the distance to the main line
+    - run(): Runs the node
 
     ## Subscribers
-    - `/odom`: subscribes to the current x, y, and theta state.
-    - `/scan`: subscribes to the LiDAR scan.
-    """
+    - `/odom`: current x, y, and theta position
+    - `/scan`: LiDAR scan
 
+    ## Publishers
+    - `/cmd_vel`: cmd_vel to control robot
+    """
     def __init__(self):
         """Initializes the node (with arguments), publishers and subscribers, and sets the initial values."""
         # * Arguments
         parser = argparse.ArgumentParser(
-            description="Runs the Bug0 Reactive Navigation Algorithm"
+            description="Runs the Bug20 Reactive Navigation Algorithm"
         )
         # parser.add_argument(  # Goal coordinates
         #     "--goal",
@@ -112,7 +118,7 @@ class BugAlgorithm:
         self.verbose = args.verbose
 
         # * Initialize node
-        rospy.init_node("Bug0")
+        rospy.init_node("Bug20")
         self.rate = rospy.Rate(60)
         rospy.on_shutdown(self.end_callback)
 
@@ -123,8 +129,12 @@ class BugAlgorithm:
         self.scan = None
         self.angles = None
         self.state = "GO_TO_GOAL"
+        self.a, self.b, self.c = 0, 0, 0
+        self.get_line()
 
-        # * Subscribe to current x, y, and theta state
+        self.closest_distance = self.distance_to_goal()
+
+        # * Subscribe to current x, y, and theta position
         rospy.Subscriber("/odom", Odometry, self.odom_callback)
 
         # * Subscribe to LiDAR scan
@@ -133,23 +143,13 @@ class BugAlgorithm:
         # * Publish to cmd_vel to control robot
         self.cmd_vel_pub = rospy.Publisher("/cmd_vel", Twist, queue_size=10)
 
-    def get_goal(self):
-        rospy.wait_for_service('get_new_goal')
-        try:
-            get_new_goal = rospy.ServiceProxy('get_new_goal', getNewGoal)
-            response = get_new_goal(self.goal_x, self.goal_y)
-            self.goal_x, self.goal_y = response.nx, response.ny
-            if True:
-                print("Current goal: ")
-                print(self.goal_x, self.goal_y)
-        except rospy.ServiceException as e:
-            print('Service call failed')
+        self.goal_pub = rospy.Publisher("/goal", String, queue_size=10)
 
     def odom_callback(self, msg):
-        """Callback for current x, y, and theta state
+        """Callback for current x, y, and theta position
 
         Args:
-            msg (Odometry): current x, y, and theta state
+            msg (Odometry): current x, y, and theta position
         """
         self.x = msg.pose.pose.position.x
         self.y = msg.pose.pose.position.y
@@ -181,6 +181,34 @@ class BugAlgorithm:
         tw.linear.x = 0
         tw.angular.z = 0
         self.cmd_vel_pub.publish(tw)
+
+    def get_line(self):
+        """Create a line from start point to end point.
+
+        Returns:
+            tuple[float, float, float]: a, b, and c constants for line equation.
+        """
+        # Following the equation ax + by + c = 0
+        x0 = self.x
+        y0 = self.y
+        xf = self.goal_x
+        yf = self.goal_y
+        self.a = y0 - yf
+        self.b = xf - x0
+        self.c = x0 * yf - xf * y0
+
+    def get_goal(self):
+        rospy.wait_for_service('get_new_goal')
+        try:
+            get_new_goal = rospy.ServiceProxy('get_new_goal', getNewGoal)
+            response = get_new_goal(self.goal_x, self.goal_y)
+            self.goal_x, self.goal_y = response.nx, response.ny
+            if True:
+                print("Current goal: ")
+                print(self.goal_x, self.goal_y)
+            self.get_line()
+        except rospy.ServiceException as e:
+            print('Service call failed')
 
     def get_scan_between_angles(self, start_angle, end_angle):
         """Gets the minimum scan data between two angles
@@ -308,35 +336,43 @@ class BugAlgorithm:
 
         return w
 
-    def go_around_obstacle(self, beta=0.5):
+    def go_around_obstacle(self, beta=0.8):
         """Controls the robot to go around the obstacle using right-hand rule. Calculates the linear and angular velocities based on the distance to the obstacle and the direction of the wall. Publishes the velocities to the cmd_vel topic.
 
         Args:
             beta (float, optional): Weighting of orientation error, between 0 and 1 the larger the value, the more the robot will try to align with the wall, 0.5 being equal weighting. Defaults to 0.5.
         """
         # * -------- Get laser scans --------
-        theta_1 = np.pi / 2  # Full right
+        amount_of_scans = 15
+        theta_1 = np.pi / 6  # Full right
         r_1 = self.get_scan_between_angles(
-            theta_1 - self.scan.angle_increment * 5,
-            theta_1 + self.scan.angle_increment * 5,
+            theta_1 - self.scan.angle_increment * amount_of_scans,
+            theta_1 + self.scan.angle_increment * amount_of_scans,
         )
 
-        theta_2 = 3 * np.pi / 4  # Right-front
+        theta_2 = 5 * np.pi / 12  # Right-front
         r_2 = min(
             self.get_scan_between_angles(
-                theta_2 - self.scan.angle_increment * 5,
-                theta_2 + self.scan.angle_increment * 5,
+                theta_2 - self.scan.angle_increment * amount_of_scans,
+                theta_2 + self.scan.angle_increment * amount_of_scans,
             ),
-            MAX_WALL_DISTANCE,  # Limit to max wall distance
+            MAX_WALL_DISTANCE * 0.5,  # Limit to max wall distance
         )
+
 
         if self.verbose and r_2 == MAX_WALL_DISTANCE:
             rospy.logerr("No wall right-front")
 
         distance_ahead = self.get_scan_between_angles(
-            np.pi - self.scan.angle_increment * 5, np.pi + self.scan.angle_increment * 5
+            (2 * np.pi / 3) - self.scan.angle_increment * 15, (2 * np.pi / 3) + self.scan.angle_increment * 15
         )
         # * ---------------------------------
+        no_obstacle_right = r_1 > OBSTACLE_THRESHOLD
+        no_obstacle_right_front = r_2 > OBSTACLE_THRESHOLD
+        no_obstacle_front = distance_ahead > OBSTACLE_THRESHOLD
+        if no_obstacle_right and no_obstacle_front and no_obstacle_right_front:
+            self.state = "GO_TO_GOAL"
+            return
 
         if distance_ahead > MAX_WALL_DISTANCE:  # If no wall ahead
             v = V_MAX * MAX_WALL_DISTANCE * 0.2  # Go slow
@@ -344,17 +380,17 @@ class BugAlgorithm:
                 rospy.logerr("No wall front")
 
             if r_1 > MAX_WALL_DISTANCE:  # And no wall on the right
-                w = -W_MAX * abs(v) * 1.0  # Force turn right
+                w = -W_MAX * max(abs(v), 0.2) * 0.7 # Force turn right
                 if self.verbose:
                     rospy.logerr("No wall right")
             else:
                 w = self.calculate_w(r_1, theta_1, r_2, theta_2, beta, v)
         else:
-            v = min((distance_ahead - DESIRED_WALL_DISTANCE * 0.5) * P_V, V_MAX)
+            v = min((distance_ahead - DESIRED_WALL_DISTANCE * 0.3) * P_V, V_MAX)
 
             if r_1 > MAX_WALL_DISTANCE:  # If no wall on the right
-                w = W_MAX * max(abs(v), 0.1) * 5.0  # Force turn left
-                if self.verbose:
+                w = W_MAX * max(abs(v), 0.2) * 8
+                if self.verbose:  # Force turn left
                     rospy.logerr("No wall right")
             else:
                 w = self.calculate_w(r_1, theta_1, r_2, theta_2, beta, v)
@@ -368,16 +404,27 @@ class BugAlgorithm:
         tw.angular.z = w
         self.cmd_vel_pub.publish(tw)
 
+    def distance_to_line(self):
+        """Calculate distance from current point to main line
+
+        Returns:
+            float: distance to line
+        """
+        return abs(self.a * self.x + self.b * self.y + self.c) / np.sqrt(
+            self.a**2 + self.b**2
+        )
+
     def run(self):
-        """Runs the Bug0 algorithm until goal is reached"""
+        """Runs the Bug20 algorithm until goal is reached"""
         self.get_goal()
         while not rospy.is_shutdown():
             if self.scan is not None:
+                self.goal_pub.publish(str(self.goal_x) + " " + str(self.goal_y))
                 if self.verbose:
                     rospy.logwarn("")  # For spacing each iteration
 
                 obstacle_in_front_distance = self.get_scan_between_angles(
-                    np.pi - VISION_ANGLE, np.pi + VISION_ANGLE
+                   (2 * np.pi / 3) - VISION_ANGLE, (2 * np.pi / 3) + VISION_ANGLE
                 )
 
                 if self.state == "GO_TO_GOAL":
@@ -389,14 +436,20 @@ class BugAlgorithm:
                 if self.state == "GO_AROUND_OBSTACLE":
                     self.go_around_obstacle()
                     angle_to_goal = self.orientation_error()
-                    if abs(angle_to_goal) <= ANGLE_THRESHOLD:
+                    if abs(angle_to_goal) <= ANGLE_THRESHOLD:  # Exit through bug0
                         self.state = "GO_TO_GOAL"
+                    elif (  # Exit through bug2
+                        self.distance_to_line() <= DISTANCE_TO_LINE_TH
+                    ):
+                        if self.closest_distance > self.distance_to_goal():
+                            self.closest_distance = self.distance_to_goal()
+                            self.state = "GO_TO_GOAL"
 
             self.rate.sleep()
 
 
 if __name__ == "__main__":
     try:
-        BugAlgorithm().run()
+        Bug20Algorithm().run()
     except rospy.ROSInterruptException:
         pass

@@ -22,8 +22,10 @@ class ArduinoMotorNode:
                         wl_rpm = float(velocities[1])
                         wr_rad_per_sec = self.rpm_to_rad_per_sec(wr_rpm)
                         wl_rad_per_sec = self.rpm_to_rad_per_sec(wl_rpm)
-                        self.pub_wr.publish(wr_rad_per_sec)
-                        self.pub_wl.publish(wl_rad_per_sec)
+			wr_final = self.mechanical_transformation(wr_rad_per_sec)
+			wl_final = self.mechanical_transformation(wl_rad_per_sec)
+                        self.pub_wr.publish(wr_final)
+                        self.pub_wl.publish(wl_final)
                     except ValueError:
                         rospy.logwarn("Invalid velocity values received")
                 else:
@@ -32,12 +34,15 @@ class ArduinoMotorNode:
     def rpm_to_rad_per_sec(self, rpm):
         return rpm * 0.01047  # Factor de conversion de RPM a rad/s
 
+    def mechanical_transformation(self, rad_per_sec):
+	return rad_per_sec * 0.78
+
     def run(self):
         self.read_serial_data()
         self.serial_port.close()
 
 if __name__ == '__main__':
-    port = "/dev/ttyUSB0" 
+    port = "/dev/ttyACM0" 
     rate = 9600 
     node = ArduinoMotorNode(port, rate)
     node.run()

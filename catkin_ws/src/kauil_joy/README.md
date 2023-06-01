@@ -5,7 +5,7 @@ Transform `joy` messages to the requiered messages for various topics.
 - [kauil\_joy](#kauil_joy)
   - [Index](#index)
   - [Files](#files)
-  - [Requierements](#requierements)
+  - [Requirements](#requirements)
   - [Further information](#further-information)
   - [Authors](#authors)
 
@@ -21,7 +21,7 @@ Transform `joy` messages to the requiered messages for various topics.
   - joy.launch
     - Launch all nodes from `/src`
 
-## Requierements
+## Requirements
 - `/src/*`
   - Controller connected. 
   - Permissions for controller. [How to](#further-information).

@@ -17,7 +17,7 @@ Repository for rescue robot.
   - [Index](#index)
   - [Folders](#folders)
   - [Installation](#installation)
-  - [Requierements](#requierements)
+  - [Requirements](#requirements)
   - [Use](#use)
   - [Authors](#authors)
   - [Project status](#project-status)
@@ -40,7 +40,7 @@ Download the Arduino files into the Arduinos and clone the repository into Kauil
 <a href="#kauil">Go to top</a>
 </div>
 
-## Requierements
+## Requirements
 - Ubuntu 18.04
 - ROS melodic
 - Python 2.6

@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<launch>
+  <node name="twist_listener" pkg="kauil_control" type="twist_listener.py"/>
+  <node name="serial_reader" pkg="kauil_control" type="serial_reader.py"/>
+</launch>

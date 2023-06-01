@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Follow the Bug0 Reactive Navigation Algorithm to reach a goal.
+Follow the Bug2 Reactive Navigation Algorithm to reach a goal.
 
 Authors:
     - Alejandro Dominguez Lugo      (A01378028)
@@ -19,21 +19,22 @@ from tf.transformations import euler_from_quaternion
 from reactive_nav.srv import *
 
 # * Constants for State Machine
-DIST_THRESHOLD = 0.10  # Distance threshold to goal
-PUZZLEBOT_SIZE = 0.2  # Size of the robot (from xacro)
+DIST_THRESHOLD = 0.075  # Distance threshold to goal
 OBSTACLE_THRESHOLD = 1.0  # Distance threshold to obstacle
+PUZZLEBOT_SIZE = 0.2  # Size of the robot (from xacro)
 VISION_ANGLE = np.arctan((PUZZLEBOT_SIZE / 2.0) / OBSTACLE_THRESHOLD)  # Vision angle
+
 
 # * Constants for go to goal
 V_MAX = 0.4  # Max linear velocity
-ALPHA = 4  # For calculating linear velocity (soft curve)
+ALPHA = 4  # For calculating linear velocity
 KW = 0.5  # Angular velocity P controller constant
 
 # * Constants for obstacle avoidance
 P_ORIENTATION = 10.0  # P controller constant for orientation
 P_V = 0.2  # P controller constant for linear velocity
 W_MAX = 1.0  # Max angular velocity
-ANGLE_THRESHOLD = np.deg2rad(5)  # Angle threshold to obstacle
+DISTANCE_TO_LINE_TH = 0.05  # Distance threshold to main line
 DESIRED_WALL_DISTANCE = PUZZLEBOT_SIZE * 1.5  # Desired distance to wall
 MAX_WALL_DISTANCE = 3.0  # Max distance to wall
 
@@ -46,50 +47,54 @@ MAX_WALL_DISTANCE = 3.0  # Max distance to wall
 # ---------------------
 
 
-class BugAlgorithm:
+class Bug2Algorithm:
     """
-    # Bug0 Algorithm
-    This node implements the Bug0 Reactive Navigation Algorithm.
+    # Bug2 Algorithm
+    This node implements the Bug2 Reactive Navigation Algorithm.
 
     ## Attributes
-    - goal_x (`float`): x coordinate of the goal.
-    - goal_y (`float`): y coordinate of the goal.
-    - verbose (`bool`): verbosity of the node.
-    - x (`float`): x coordinate of the robot.
-    - y (`float`): y coordinate of the robot.
-    - theta (`float`): orientation (theta) of the robot.
-    - rate (`rospy.Rate`): rate of the node.
-    - scan (`LaserScan`): laser scan of the LiDAR.
-    - angles (`np.array`): angles of the LiDAR scan.
-    - state (`str`): state of the state machine.
-    - cmd_vel_pub (`rospy.Publisher`): publisher for the cmd_vel topic.
+    - goal_x (`float`): x coordinate of the goal
+    - goal_y (`float`): y coordinate of the goal
+    - verbose (`bool`): verbosity of the node
+    - x (`float`): current x coordinate of the robot
+    - y (`float`): current y coordinate of the robot
+    - theta (`float`): current theta coordinate of the robot
+    - scan (`LaserScan`): current LiDAR scan
+    - angles (`np.array`): angles of the LiDAR scan
+    - state (`str`): current state of the state machine
+    - a (`float`): a constant for the line equation
+    - b (`float`): b constant for the line equation
+    - c (`float`): c constant for the line equation
+    - cmd_vel_pub (`Publisher`): publisher for cmd_vel
+    - rate (`Rate`): rate of the node
 
     ## Methods
-    - __init__(): initializes the node (with arguments), publishers and subscribers, and sets the initial values.
-    - odom_callback(msg): callback for current x, y, and theta state.
-    - scan_callback(msg): callback for LiDAR scan.
-    - end_callback(): if node dies, for instance, by keyboard interrupt, we stop the robot.
-    - get_scan_between_angles(start_angle, end_angle): returns the scan between two angles.
-    - distance_to_goal(): returns the linear distance to the goal.
-    - orientation_error(): returns the orientation error to the goal.
-    - go_to_goal(): implements the go to goal behavior.
-    - calculate_w(r_1, theta_1, r_2, theta_2, beta, v): calculates the angular velocity to follow the wall.
-    - go_around_obstacle(beta): implements the go around obstacle behavior.
-    - run(): runs the node.
-
-    ## Publishers
-    - `/cmd_vel`: publishes the linear and angular velocity to control the robot.
+    - __init__(): initializes the node (with arguments), publishers and subscribers, and sets the initial values
+    - odom_callback(msg): callback for current x, y, and theta state
+    - scan_callback(msg): callback for LiDAR scan
+    - end_callback(): if node dies, for instance, by keyboard interrupt, we stop the robot
+    - get_line(): calculates the line equation from the origin to the goal
+    - get_scan_between_angles(start_angle, end_angle): gets the scan between two angles
+    - distance_to_goal(): calculates the linear distance to the goal
+    - orientation_error(): calculates the orientation error to the goal
+    - go_to_goal(): calculates the linear and angular velocity to go to the goal
+    - calculate_w(r_1, theta_1, r_2, theta_2, beta, v): calculates the angular velocity to follow the wall
+    - go_around_obstacle(beta): calculates the linear and angular velocity to go around the obstacle
+    - distance_to_line(): calculates the distance to the main line
+    - run(): runs the Bug2 Algorithm
 
     ## Subscribers
-    - `/odom`: subscribes to the current x, y, and theta state.
-    - `/scan`: subscribes to the LiDAR scan.
-    """
+    - `/odom`: current x, y, and theta state
+    - `/scan`: LiDAR scan
 
+    ## Publishers
+    - `/cmd_vel`: cmd_vel to control the robot
+    """
     def __init__(self):
         """Initializes the node (with arguments), publishers and subscribers, and sets the initial values."""
         # * Arguments
         parser = argparse.ArgumentParser(
-            description="Runs the Bug0 Reactive Navigation Algorithm"
+            description="Runs the Bug2 Reactive Navigation Algorithm"
         )
         # parser.add_argument(  # Goal coordinates
         #     "--goal",
@@ -112,7 +117,7 @@ class BugAlgorithm:
         self.verbose = args.verbose
 
         # * Initialize node
-        rospy.init_node("Bug0")
+        rospy.init_node("Bug2")
         self.rate = rospy.Rate(60)
         rospy.on_shutdown(self.end_callback)
 
@@ -123,8 +128,10 @@ class BugAlgorithm:
         self.scan = None
         self.angles = None
         self.state = "GO_TO_GOAL"
+        self.a, self.b, self.c = 0, 0, 0
+        self.get_line()
 
-        # * Subscribe to current x, y, and theta state
+        # * Subscribe to current x, y, and theta position
         rospy.Subscriber("/odom", Odometry, self.odom_callback)
 
         # * Subscribe to LiDAR scan
@@ -132,18 +139,7 @@ class BugAlgorithm:
 
         # * Publish to cmd_vel to control robot
         self.cmd_vel_pub = rospy.Publisher("/cmd_vel", Twist, queue_size=10)
-
-    def get_goal(self):
-        rospy.wait_for_service('get_new_goal')
-        try:
-            get_new_goal = rospy.ServiceProxy('get_new_goal', getNewGoal)
-            response = get_new_goal(self.goal_x, self.goal_y)
-            self.goal_x, self.goal_y = response.nx, response.ny
-            if True:
-                print("Current goal: ")
-                print(self.goal_x, self.goal_y)
-        except rospy.ServiceException as e:
-            print('Service call failed')
+    
 
     def odom_callback(self, msg):
         """Callback for current x, y, and theta state
@@ -181,6 +177,34 @@ class BugAlgorithm:
         tw.linear.x = 0
         tw.angular.z = 0
         self.cmd_vel_pub.publish(tw)
+
+    def get_line(self):
+        """Create a line from start point to end point.
+
+        Returns:
+            tuple[float, float, float]: a, b, and c constants for line equation.
+        """
+        # Following the equation ax + by + c = 0
+        x0 = self.x
+        y0 = self.y
+        xf = self.goal_x
+        yf = self.goal_y
+        self.a = y0 - yf
+        self.b = xf - x0
+        self.c = x0 * yf - xf * y0
+
+    def get_goal(self):
+        rospy.wait_for_service('get_new_goal')
+        try:
+            get_new_goal = rospy.ServiceProxy('get_new_goal', getNewGoal)
+            response = get_new_goal(self.goal_x, self.goal_y)
+            self.goal_x, self.goal_y = response.nx, response.ny
+            if True:
+                print("Current goal: ")
+                print(self.goal_x, self.goal_y)
+            self.get_line()
+        except rospy.ServiceException as e:
+            print('Service call failed')
 
     def get_scan_between_angles(self, start_angle, end_angle):
         """Gets the minimum scan data between two angles
@@ -368,8 +392,18 @@ class BugAlgorithm:
         tw.angular.z = w
         self.cmd_vel_pub.publish(tw)
 
+    def distance_to_line(self):
+        """Calculate distance from current point to main line
+
+        Returns:
+            float: distance to line
+        """
+        return abs(self.a * self.x + self.b * self.y + self.c) / np.sqrt(
+            self.a**2 + self.b**2
+        )
+
     def run(self):
-        """Runs the Bug0 algorithm until goal is reached"""
+        """Runs the Bug2 algorithm until goal is reached"""
         self.get_goal()
         while not rospy.is_shutdown():
             if self.scan is not None:
@@ -388,8 +422,7 @@ class BugAlgorithm:
 
                 if self.state == "GO_AROUND_OBSTACLE":
                     self.go_around_obstacle()
-                    angle_to_goal = self.orientation_error()
-                    if abs(angle_to_goal) <= ANGLE_THRESHOLD:
+                    if self.distance_to_line() <= DISTANCE_TO_LINE_TH:
                         self.state = "GO_TO_GOAL"
 
             self.rate.sleep()
@@ -397,6 +430,6 @@ class BugAlgorithm:
 
 if __name__ == "__main__":
     try:
-        BugAlgorithm().run()
+        Bug2Algorithm().run()
     except rospy.ROSInterruptException:
         pass
