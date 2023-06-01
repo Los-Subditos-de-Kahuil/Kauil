@@ -17,11 +17,11 @@ from geometry_msgs.msg import (
     TransformStamped,
     PoseStamped
 )
-from fiducial_msgs.msg import FiducialTransformArray
+#! from fiducial_msgs.msg import FiducialTransformArray
 from visualization_msgs.msg import MarkerArray, Marker
 
 # * Robot parameters
-R, L = 0.05, 0.19  # Wheel radius and distance between wheels
+R, L = 0.160, 0.51  # Wheel radius and distance between wheels
 
 # * Covariance constants
 KL = 1  # Covariance constant of the left wheel
@@ -82,11 +82,11 @@ class KalmanFilter:
         # * Subscribers
         rospy.Subscriber("/wl", Float32, self.callback_wl)
         rospy.Subscriber("/wr", Float32, self.callback_wr)
-        rospy.Subscriber(
-            "/fiducial_transforms",
-            FiducialTransformArray,
-            callback=self.callback_fiducial,
-        )
+        #! rospy.Subscriber(
+         #   "/fiducial_transforms",
+          #  FiducialTransformArray,
+           # callback=self.callback_fiducial,
+        #)
 
         # * Publishers
         self.kalman_publisher = rospy.Publisher(

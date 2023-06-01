@@ -1,14 +1,4 @@
 #!/usr/bin/env python
-"""
-Move Kauil in a straight line for X seconds
-
-Authors:
-    - Alejandro Dominguez Lugo      (A01378028)
-    - Diego Alberto Anaya Marquez   (A01379375)
-    - Nancy Lesly Garcia Jimenez    (A01378043)
-
-Date: 2023/04/09
-"""
 # ------------------------- Imports --------------------------
 import rospy
 from geometry_msgs.msg import Twist
@@ -37,7 +27,7 @@ rospy.on_shutdown(end_callback)
 
 
 def run(verbose=False):
-    """Move Kauil in a straight line for X seconds
+    """Move Gothmog in a straight line for 10 seconds
 
     Args:
         verbose (bool, optional): To be talkative. Defaults to False.
@@ -56,7 +46,7 @@ def run(verbose=False):
             tf = rospy.get_rostime().to_sec()
 
             # If time is over stop
-            if tf - t0 >= 2:
+            if tf - t0 >= 3.6:
                 if verbose:
                     print("Task finished, master.")
 
@@ -71,7 +61,7 @@ def run(verbose=False):
             if verbose:
                 print(str(tf - t0) + " seconds have passed, master.")
 
-            v = 1.0
+            v = 0.28
             w = 0.0
             vel_cmd.linear.x = v
             vel_cmd.angular.z = w

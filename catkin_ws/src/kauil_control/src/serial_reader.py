@@ -42,7 +42,7 @@ class ArduinoMotorNode:
         self.serial_port.close()
 
 if __name__ == '__main__':
-    port = "/dev/ttyACM0" 
-    rate = 9600 
+    port = "/dev/ttyACM1"
+    rate = 9600
     node = ArduinoMotorNode(port, rate)
     node.run()

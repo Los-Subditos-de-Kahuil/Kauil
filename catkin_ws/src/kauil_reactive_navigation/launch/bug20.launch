@@ -2,6 +2,6 @@
 <launch>
   <include file="$(find kauil_control)/launch/control.launch"/>
   <node name="kauil_kalman" pkg="kauil_kalman" type="kalman.py"/>
-  <node name="node_server" pkg="kauil_reactive_navigation " type="node_server.py"/>
+  <node name="node_server" pkg="kauil_reactive_navigation" type="node_server.py"/>
   <node name="kauil_bug20" pkg="kauil_reactive_navigation" type="kauil_bug20.py"/>
 </launch>
