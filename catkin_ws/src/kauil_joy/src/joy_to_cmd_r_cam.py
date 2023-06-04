@@ -62,7 +62,7 @@ class JoyToCmdCamR:
             msg (Joy): Joy message
         """
         # Indexes obtained from running `rostopic echo joy`
-        # They correspond to the right buttons in the controller
+        # They correspond to the right button-pad in the controller
         self.calls["k"] = msg.buttons[0]  # Lower button
         self.calls["l"] = msg.buttons[1]  # Right button
         self.calls["j"] = msg.buttons[2]  # Left button

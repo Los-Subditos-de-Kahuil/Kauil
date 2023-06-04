@@ -1,15 +1,10 @@
-<style>
-  .center {
-    text-align : center;
-  }
-</style>
 # Kauil
 Repository for Kauil; a rescue robot.
 
 <br>
 
-<div class="center">
-<img src="./misc/kauil.jpeg" alt=kauil width="100%">
+<div style="text-align: center">
+  <img src="./misc/kauil.jpeg" alt=kauil width="100%">
 </div>
 
 ## Index 
@@ -90,7 +85,7 @@ Note: To ensure the satisfaction of the stated requirements be sure to follow th
 </div>
 
 ## Project status
-The project is finished and no further development will be made by the current owners of the repository.
+The project is finished as of June 2023 and no further development will be made by the current owners of the repository.
 
 <div align ="right">
 <a href="#kauil">Go to top</a>

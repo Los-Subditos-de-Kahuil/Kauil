@@ -1,4 +1,16 @@
 <?xml version="1.0"?>
+<!--
+Launch required nodes for the control of the robot:
+  - twist_listener.py: Listens to the /cmd_vel topic and publishes the corresponding pulse widths to the serial port (Arduino Nano).
+  - serial_reader.py: Reads the serial port (Arduino Leonardo) and publishes the corresponding wheel velocities to the /wr and /wl topics.
+
+Authors:
+  - Alejandro Domínguez Lugo    (A01378028)
+  - Diego Alberto Anaya Márquez (A01379375)
+  - Nancy Lesly García Jiménez  (A01378043)
+
+Date: 2023/05/25
+-->
 <launch>
   <node name="twist_listener" pkg="kauil_control" type="twist_listener.py"/>
   <node name="serial_reader" pkg="kauil_control" type="serial_reader.py"/>

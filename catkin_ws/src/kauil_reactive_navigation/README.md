@@ -11,10 +11,6 @@ Reactive navigation algorithms for Kauil
 
 ## Files
 - `/launch`
-  - [bug0.launch](./launch/bug0.launch)
-    - Launch bug 0 algorithm node.
-  - [bug2,launch](./launch/bug2.launch)
-    - Launch bug 2 algorithm node.
   - [bug20.launch](./launch/bug20.launch)
     - Launch bug 20 algorithm and services for goal change.
 - `/resources`
@@ -24,10 +20,6 @@ Reactive navigation algorithms for Kauil
     - [node_server.py](./scripts/node_server.py)
       - Node to keep the service of [getNewGoal](#getNewGoal)
 - `/src`
-  - [bug0.py](./src/bug0.py)
-    - Implementation fo bug 0 algorithm.
-  - [bug2.py](./src/bug2.py)
-    - Implementation for bug 2 algorithm.
   - [kauil_bug20.py](./src/kauil_bug20.py)
     - Implementation for bug 20 algorithm; algorithm developed by the owners of the repo.
 - `/srv`

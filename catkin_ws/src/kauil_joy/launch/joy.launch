@@ -14,14 +14,15 @@ Authors:
 Date: 2023/05/09
 -->
 <launch>
+  <!-- * Arguments -->
   <arg name="joy_dev" default="/dev/input/js0"/>
 
+  <!-- * Joy Node -->
   <node name="joy" pkg="joy" type="joy_node" output="screen">
     <param name="dev" value="$(arg joy_dev)"/>
-    <!-- <param name="autorepeat_rate" value="10"/> -->
-    <!-- <param name="coalesce_interval" value="0.01"/> -->
   </node>
 
+  <!-- * Command Nodes -->
   <node name="joy_to_cmd_vel" pkg="kauil_joy" type="joy_to_cmd_vel.py" output="screen"/>
   <node name="joy_to_cmd_cam_l" pkg="kauil_joy" type="joy_to_cmd_l_cam.py" output="screen"/>
   <node name="joy_to_cmd_cam_r" pkg="kauil_joy" type="joy_to_cmd_r_cam.py" output="screen"/>  
