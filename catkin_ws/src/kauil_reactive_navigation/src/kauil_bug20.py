@@ -21,19 +21,19 @@ from std_msgs.msg import String
 
 # * Constants for State Machine
 DIST_THRESHOLD = 0.10  # Distance threshold to goal
-OBSTACLE_THRESHOLD = 0.50  # Distance threshold to obstacle
-PUZZLEBOT_SIZE = 0.89  # Size of the robot (from xacro)
+OBSTACLE_THRESHOLD = 1.3  # Distance threshold to obstacle
+PUZZLEBOT_SIZE = 1  # Size of the robot (from xacro)
 VISION_ANGLE = np.arctan((PUZZLEBOT_SIZE / 2.0) / OBSTACLE_THRESHOLD)  # Vision angle
 
 # * Constants for go to goal
 V_MAX = 0.28  # Max linear velocity
 ALPHA = 2.0  # For calculating linear velocity
-KW = 0.14  # Angular velocity P controller constant
+KW = 1  # Angular velocity P controller constant
 
 # * Constants for obstacle avoidance
 P_ORIENTATION = 1.0  # P controller constant for orientation
 P_V = 0.1  # P controller constant for linear velocity
-W_MAX = 0.1  # Max angular velocity
+W_MAX = 0.4  # Max angular velocity
 DISTANCE_TO_LINE_TH = 0.05  # Distance threshold to main line
 ANGLE_THRESHOLD = np.deg2rad(5)  # Angle threshold to obstacle
 DESIRED_WALL_DISTANCE = PUZZLEBOT_SIZE * 1.5  # Desired distance to wall
@@ -240,8 +240,11 @@ class Bug20Algorithm:
                     (self.scan.ranges[start_index:], self.scan.ranges[:end_index])
                 )
             )
-
-        return min(self.scan.ranges[start_index:end_index])
+        
+        scan = np.mean(self.scan.ranges[start_index:end_index])
+        if np.isnan(scan):
+            scan = self.scan.range_max
+        return scan
 
     def distance_to_goal(self):
         """Calculates the distance to the goal
@@ -276,7 +279,8 @@ class Bug20Algorithm:
     def go_to_goal(self):
         """Controls the robot to go to the goal. Calculates the linear and angular velocities based on the distance to the goal and the orientation error. Publishes the velocities to the cmd_vel topic."""
         if self.verbose:
-            rospy.logwarn("Going to goal")
+            pass
+        rospy.logwarn("Going to goal")
 
         # * Calculate errors
         distance_err = self.distance_to_goal()
@@ -328,7 +332,7 @@ class Bug20Algorithm:
         # * Calculate angular velocity
         w = max(
             min(
-                (err_orientation + err_dist) * max(abs(v), 0.1) * P_ORIENTATION,
+                (err_orientation + err_dist) * P_ORIENTATION,
                 W_MAX,
             ),
             -W_MAX,
@@ -336,7 +340,7 @@ class Bug20Algorithm:
 
         return w
 
-    def go_around_obstacle(self, beta=0.8):
+    def go_around_obstacle(self, beta=0.25):
         """Controls the robot to go around the obstacle using right-hand rule. Calculates the linear and angular velocities based on the distance to the obstacle and the direction of the wall. Publishes the velocities to the cmd_vel topic.
 
         Args:
@@ -344,13 +348,13 @@ class Bug20Algorithm:
         """
         # * -------- Get laser scans --------
         amount_of_scans = 15
-        theta_1 = np.pi / 6  # Full right
+        theta_1 = - np.pi/2 # Full right
         r_1 = self.get_scan_between_angles(
             theta_1 - self.scan.angle_increment * amount_of_scans,
             theta_1 + self.scan.angle_increment * amount_of_scans,
         )
 
-        theta_2 = 5 * np.pi / 12  # Right-front
+        theta_2 = theta_1 + (np.pi/4)  # Right-front
         r_2 = min(
             self.get_scan_between_angles(
                 theta_2 - self.scan.angle_increment * amount_of_scans,
@@ -360,11 +364,11 @@ class Bug20Algorithm:
         )
 
 
-        if self.verbose and r_2 == MAX_WALL_DISTANCE:
+        if r_2 == MAX_WALL_DISTANCE:
             rospy.logerr("No wall right-front")
 
         distance_ahead = self.get_scan_between_angles(
-            (2 * np.pi / 3) - self.scan.angle_increment * 15, (2 * np.pi / 3) + self.scan.angle_increment * 15
+        - self.scan.angle_increment * 15, self.scan.angle_increment * 15
         )
         # * ---------------------------------
         no_obstacle_right = r_1 > OBSTACLE_THRESHOLD
@@ -375,23 +379,26 @@ class Bug20Algorithm:
             return
 
         if distance_ahead > MAX_WALL_DISTANCE:  # If no wall ahead
-            v = V_MAX * MAX_WALL_DISTANCE * 0.2  # Go slow
+            v = V_MAX * MAX_WALL_DISTANCE * 0.5  # Go slow
             if self.verbose:
-                rospy.logerr("No wall front")
+                pass
+            rospy.logerr("No wall front")
 
             if r_1 > MAX_WALL_DISTANCE:  # And no wall on the right
-                w = -W_MAX * max(abs(v), 0.2) * 0.7 # Force turn right
+                w = W_MAX
                 if self.verbose:
-                    rospy.logerr("No wall right")
+                    pass
+                rospy.logerr("No wall right")
             else:
                 w = self.calculate_w(r_1, theta_1, r_2, theta_2, beta, v)
         else:
             v = min((distance_ahead - DESIRED_WALL_DISTANCE * 0.3) * P_V, V_MAX)
 
             if r_1 > MAX_WALL_DISTANCE:  # If no wall on the right
-                w = W_MAX * max(abs(v), 0.2) * 8
+                w = W_MAX
                 if self.verbose:  # Force turn left
-                    rospy.logerr("No wall right")
+                    pass
+                rospy.logerr("No wall right")
             else:
                 w = self.calculate_w(r_1, theta_1, r_2, theta_2, beta, v)
 
@@ -424,11 +431,13 @@ class Bug20Algorithm:
                     rospy.logwarn("")  # For spacing each iteration
 
                 obstacle_in_front_distance = self.get_scan_between_angles(
-                   (2 * np.pi / 3) - VISION_ANGLE, (2 * np.pi / 3) + VISION_ANGLE
+                - VISION_ANGLE, VISION_ANGLE
                 )
+                theta_1 = - np.pi/2
+                obstacle_in_right_distance = self.get_scan_between_angles(theta_1 - self.scan.angle_increment * 10, theta_1 + self.scan.angle_increment * 10)
 
                 if self.state == "GO_TO_GOAL":
-                    if obstacle_in_front_distance <= OBSTACLE_THRESHOLD:
+                    if obstacle_in_front_distance <= OBSTACLE_THRESHOLD or obstacle_in_right_distance <= OBSTACLE_THRESHOLD:
                         self.state = "GO_AROUND_OBSTACLE"
                     else:
                         self.go_to_goal()

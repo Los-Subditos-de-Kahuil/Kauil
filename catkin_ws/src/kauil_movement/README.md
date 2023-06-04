@@ -9,7 +9,7 @@ Run Kauil's movement routines.
 
 ## Files
 - `/src`
-  - foward_t.py
+  - [foward_t.py](./src/forward_t.py)
     - Move Kauil foward for a certain time.
 
 ## Authors

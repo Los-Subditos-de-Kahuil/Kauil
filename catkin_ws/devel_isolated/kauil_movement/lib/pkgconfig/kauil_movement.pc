@@ -1,8 +1,0 @@
-prefix=/home/alejandro/Documentos/802/Kauil/catkin_ws/devel_isolated/kauil_movement
-
-Name: kauil_movement
-Description: Description of kauil_movement
-Version: 0.0.0
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: 

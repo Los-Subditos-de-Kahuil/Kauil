@@ -1,5 +1,5 @@
 # kauil_control
-Manages a `cmd_vel` to move Kauil accordingly.
+Implementation of the nodes required to establish control on Kauil's movement.
 
 ## Index
 - [kauil\_control](#kauil_control)
@@ -10,15 +10,23 @@ Manages a `cmd_vel` to move Kauil accordingly.
   - [Authors](#authors)
 
 ## Files
+- `/launch`
+    - [control.launch](./launch/control.launch)
+      - Launches a node to manage the `/cmd_velocity` topic to move Kauil and another to read the information from Kail's encoders and publish them in `/wr` and `/wl`.
 - `/src`
-  - twist_listener.py
+  - [encoders.ino](./src/encoders.ino)
+    - File to be uploaded to the Arduino connected to the encoders to obtain their information and transmit them as the rpm of each wheel.
+  - [serial_reader.py](./src/serial_reader.py)
+    - Read the rpm of each wheel transmitted by the Arduino and translate them to angular velocities. Then publish them to `/wr` and `/wl`.
+  - [twist_listener.py](./src/twist_listener.py)
     - Reads a `cmd_vel` message and translates it to two counters' duty cycles so that Kauil moves.
 
 ## Requierements
-- `/src/twist_listener.py`
-  - Installed in Kauil's `catkin_ws`.
-  - Arduino connected to Kauil and Sabertooth.
-  - Access to the Arduino's usb port. [How to](#further-information).
+- `/launch/*` and `/src/*`
+  - Battery connected to Kauil's computer.
+  - Battery connected to Kauil's motors.
+
+Note: all Arduinos already have access granted usb ports. If access is required please follow the next [steps](#further-information). Also, sometimes, when reconnecting the Arduinos, their id is changed, thus it is deeply suggested to connect one by one and check their assigned ports and, most importantly, revise the ports assigned in the code. These must coincide.
 
 ## Further information
 - Grant access to Arduino's usb port

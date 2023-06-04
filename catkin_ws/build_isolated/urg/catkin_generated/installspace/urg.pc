@@ -1,8 +1,0 @@
-prefix=/home/alejandro/Documentos/802/Kauil/catkin_ws/install_isolated
-
-Name: urg
-Description: Description of urg
-Version: 0.0.0
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: 
