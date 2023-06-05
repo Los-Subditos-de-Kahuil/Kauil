@@ -27,10 +27,10 @@ class ImagePublisher:
     This node reads information from the cameras and publishes images to a ROS topic.
 
     ## Attributes
+    - rate (`rospy.Rate`): rate at which the node will run
     - imageRight (`numpy.ndarray`): image from right camera
     - imageLeft (`numpy.ndarray`): image from left camera
     - bridge (`CvBridge`): bridge between ROS and OpenCV
-    - rate (`rospy.Rate`): rate at which the node will run
     - rightCam (`cv2.VideoCapture`): right camera
     - leftCam (`cv2.VideoCapture`): left camera
     - rightPublisher (`rospy.Publisher`): publisher to right_camera topic
@@ -58,10 +58,10 @@ class ImagePublisher:
 
         # * Initialize cameras
         self.rightCam = cv2.VideoCapture(
-            "http://admin:@192.168.1.101/videostream.cgi?[?rate=6]"
+            "http://admin:@192.168.1.102/videostream.cgi?[?rate=6]"
         )
         self.leftCam = cv2.VideoCapture(
-            "http://admin:@192.168.1.102/videostream.cgi?[?rate=6]"
+            "http://admin:@192.168.1.101/videostream.cgi?[?rate=6]"
         )
 
         # * Publishers
@@ -80,9 +80,9 @@ class ImagePublisher:
                 retR, self.imageRight = self.rightCam.read()
                 retL, self.imageLeft = self.leftCam.read()
                 if not retR and verbose:
-                    print("Failed to read right camera")
+                    rospy.logwarn("Failed to read right camera")
                 if not retL and verbose:
-                    print("Fialed to read left camera")
+                    rospy.logwarn("Fialed to read left camera")
 
                 # * Publish images
                 self.rightPublisher.publish(

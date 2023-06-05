@@ -1,9 +1,24 @@
+<!--
+Launch Kauil simulation in Rviz.
+
+Authors:
+  - Alejandro Domínguez Lugo    (A01378028)
+  - Diego Alberto Anaya Márquez (A01379375)
+  - Nancy Lesly García Jiménez  (A01378043)
+
+Date: 2023/05/25
+-->
 <launch>
+  <!-- * Arguments -->
   <arg name="model" default="$(find Kauil_description)/urdf/Kauil.xacro"/>
   <arg name="gui" default="true"/>
   <arg name="rvizconfig" default="$(find Kauil_description)/launch/urdf.rviz"/>
+
+  <!-- * Parameters -->
   <param name="robot_description" command="$(find xacro)/xacro $(arg model)"/>
   <param name="use_gui" value="$(arg gui)"/>
+
+  <!-- * Nodes -->
   <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher"/>
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
   <node name="rviz" pkg="rviz" args="-d $(arg rvizconfig)" type="rviz" required="true"/>

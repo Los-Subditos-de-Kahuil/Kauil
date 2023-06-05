@@ -10,14 +10,14 @@ Kauil vision nodes.
 
 ## Files
 - `/src`
-  - image_publisher.py
+  - [image_publisher.py](./src/image_publisher.py)
     - Image publisher for Kauil's cameras.
-  - l_camera_position_listener.py
+  - [l_camera_position_listener.py](./src/l_camera_position_listener.py)
     - Read from `/left_camera/cmd` and do a request to move de left camera.
-  - r_camera_position_listener.py
+  - [r_camera_position_listener.py](./src/r_camera_position_listener.py)
     - Read from `/right_camera/cmd` and do a request to move the right camera.
 - `/launch`
-  - camera_movement.launch
+  - [camera_movement.launch](./launch/camera_movement.launch)
     - Launch `/src/l_camera_position_listener.py` and `/src/r_camera_position_listener.py`
 
 ## Requierements

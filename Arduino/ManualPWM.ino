@@ -8,12 +8,13 @@ Authors:
 
 Date: 2023/04/24
 */
+
 void setCompareRegs(const int channel, const int value) {
   /*
   Set duty cycle values in the requiered channel.
   
   Args:
-    channel (int) : channel requiered to be updated
+    channel (int) : channel required to be updated
 
     value (int) : value to be updated to
   */
@@ -55,7 +56,6 @@ int getChannel(const String inString, const int colonIndex) {
 }
 
 void setup() {
-  // Setup
   Serial.begin(9600);
   pinMode(9, OUTPUT); // OC1A
   pinMode(10, OUTPUT); // OC1B
@@ -68,23 +68,21 @@ void setup() {
   TCCR1B = _BV(WGM13) | _BV(CS11);
   ICR1 = 20000;
 
-  // Set to angular and linear velocities = 0.0
+  // * Set to angular and linear velocities = 0.0
   setCompareRegs(1, 1432);
   setCompareRegs(2, 1390);
 }
 
 void loop() {
-  // loop
-
-  // Reed serial
+  // * Reed serial
   while (Serial.available() == 0) {}
   String inString = Serial.readStringUntil('\n');
   inString.trim();
 
-  // Get position of colon identifier
+  // * Get position of colon identifier
   int colonIndex = inString.indexOf(":");
 
-  // Get channel and value and update
+  // * Get channel and value and update
   int value = getValue(inString, colonIndex);
   int channel = getChannel(inString, colonIndex);
   setCompareRegs(channel, value);

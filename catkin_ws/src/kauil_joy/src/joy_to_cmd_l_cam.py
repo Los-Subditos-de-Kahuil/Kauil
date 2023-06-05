@@ -62,7 +62,7 @@ class JoyToCmdCamL:
             msg (Joy): Joy message
         """
         # Indexes obtained from running `rostopic echo joy`
-        # They correspond to the left buttons in the controller
+        # They correspond to the left button-pad in the controller
         # * Get values
         u_d = msg.axes[-1]  # Up and down
         l_r = msg.axes[-2]  # Left and right

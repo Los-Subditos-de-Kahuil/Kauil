@@ -1,0 +1,11 @@
+<launch>
+  <include file="$(find kauil_vision)/launch/init_cameras.launch"/>
+  <node pkg="urg_node" name="urg_node" type="urg_node" args="H1316884"/>
+  <node pkg="kauil_kalman" name="EKF" type="kalman.py"/>
+  <include file="$(find aruco_detect)/launch/aruco_detect.launch">
+    <arg name="camera" value="left_camera"/>
+    <arg name="image" value="image_raw"/>
+  </include>
+  <node pkg="kauil_mapping" name="Mapper" type="mapping.py"/>
+  <include file="$(find kauil_reactive_navigation)/launch/bug20.launch"/>
+</launch>

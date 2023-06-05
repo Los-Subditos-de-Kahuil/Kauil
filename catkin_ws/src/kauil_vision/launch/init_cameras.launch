@@ -1,0 +1,5 @@
+<launch>
+  <node pkg="kauil_vision" name="kauil_image_publisher" type="image_publisher.py"/>
+  <node pkg="kauil_vision" name="camera_info_publisher" type="camera_info_publisher.py" />
+  <node pkg="image_transport" name="republish" type="republish" args="raw in:=/left_camera compressed out:=/left_camera/image_raw"/>
+</launch>

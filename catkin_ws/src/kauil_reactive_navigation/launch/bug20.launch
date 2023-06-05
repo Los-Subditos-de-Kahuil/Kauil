@@ -1,6 +1,15 @@
 <?xml version="1.0"?>
+<!--
+Description: Launch file for the reactive navigation of the Kauil robot using the Bug20 algorithm, designed by Alejandro Domínguez Lugo, Diego Alberto Anaya Márquez and Nancy Lesly García Jiménez, based on the popular Bug0 and Bug2 algorithms.
+
+Authors:
+  - Alejandro Domínguez Lugo    (A01378028)
+  - Diego Alberto Anaya Márquez (A01379375)
+  - Nancy Leslye García Jiménez (A01378043)
+
+Date: 2023/05/09
+-->
 <launch>
-  <include file="$(find kauil_control)/launch/control.launch"/>
   <node name="kauil_kalman" pkg="kauil_kalman" type="kalman.py"/>
   <node name="node_server" pkg="kauil_reactive_navigation" type="node_server.py"/>
   <node name="kauil_bug20" pkg="kauil_reactive_navigation" type="kauil_bug20.py"/>

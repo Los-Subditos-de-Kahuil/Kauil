@@ -26,9 +26,9 @@ class CameraMover:
     This node reads information from a ROS topic and moves the left camera.
 
     ## Attributes
+    - rate (`rospy.Rate`): rate at which the node will run
     - command (`str`): command to be sent to the cameras
     - commands (`dict`): dictionary of commands
-    - rate (`rospy.Rate`): rate at which the node will run
 
     ## Methods
     - __init__(): initialize node, subscriber and commands

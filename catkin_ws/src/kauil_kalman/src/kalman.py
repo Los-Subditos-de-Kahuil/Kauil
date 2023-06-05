@@ -1,4 +1,14 @@
 #!/usr/bin/env python
+"""
+Use EKF to estimate the state of the robot using map based localization.
+
+Authors:
+    - Alejandro Dominguez Lugo      (A01378028)
+    - Diego Alberto Anaya Marquez   (A01379375)
+    - Nancy Lesly Garcia Jimenez    (A01378043)
+
+Date: 2023/05/25
+"""
 import rospy
 import tf
 import numpy as np
@@ -15,17 +25,17 @@ from geometry_msgs.msg import (
     Point,
     Quaternion,
     TransformStamped,
-    PoseStamped
+    PoseStamped,
 )
-#! from fiducial_msgs.msg import FiducialTransformArray
+from fiducial_msgs.msg import FiducialTransformArray
 from visualization_msgs.msg import MarkerArray, Marker
 
 # * Robot parameters
 R, L = 0.160, 0.51  # Wheel radius and distance between wheels
 
 # * Covariance constants
-KL = 1  # Covariance constant of the left wheel
-KR = 1  # Covariance constant of the right wheel
+KL = 50  # Covariance constant of the left wheel
+KR = 50  # Covariance constant of the right wheel
 SIGMA0 = np.array([[0, 0, 0], [0, 0, 0], [0, 0, 0]])  # Initial covariance matrix
 
 # * Frequency and period
@@ -61,7 +71,55 @@ def get_camera_robot_transformation(th=np.pi / 2):
 
 
 class KalmanFilter:
+    """
+    # Kalman Filter
+    This node implements the Extended Kalman Filter algorithm to estimate the state of the robot using map based localization.
+
+    ## Attributes
+    - rate (`rospy.Rate`): Rate of the node.
+    - fiducial_poses (`FiducialTransformArray`): Fiducial poses.
+    - wl (`float`): Angular velocity of the left wheel.
+    - wr (`float`): Angular velocity of the right wheel.
+    - camera_robot_transformation (`np.NDArray`): Transformation between the camera and the robot.
+    - Rk (`np.NDArray`): Covariance matrix of the measurement.
+    - pOD (`rospy.Publisher`): Publisher of the odometry.
+    - kalman_publisher (`rospy.Publisher`): Publisher of the kalman pose.
+    - markers_publisher (`rospy.Publisher`): Publisher of the seen ArUco markers.
+    - br (`tf2_ros.TransformBroadcaster`): Transform broadcaster.
+    - brStatic (`tf2_ros.StaticTransformBroadcaster`): Static transform broadcaster.
+    - map (`dict`): Map of the environment.
+
+    ## Methods
+    - __init__(): Initializes the node, broadcasters, publishers and subscribers, and sets the initial conditions.
+    - callback_wl(`msg`): Callback of the topic /wl. It updates the angular velocity of the left wheel.
+    - callback_wr(`msg`): Callback of the topic /wr. It updates the angular velocity of the right wheel.
+    - callback_fiducial(`msg`): Callback of the topic /fiducial_transforms. It updates the fiducial poses.
+    - send_odom_frame_fixed(`x`, `y`): Broadcasts the odometry frame.
+    - calculate_covariance(`q`, `v`, `sigma`): Calculates the covariance matrix of the robot from encoders.
+    - covariance_3_to_6(`sigma`): Converts a 3x3 covariance matrix to a 6x6 covariance matrix.
+    - initialize_odometry(`cTime`, `x`, `y`, `qRota`, `v`, `w`, `covariance`): Initializes the odometry message.
+    - initialize_pose(`cTime`, `odom`): Initializes the pose message.
+    - create_dp(`aruco_pose_map`, `robot_pose_map`): Creates the dp vector, containing [[dx], [dy], [p]].
+    - get_Gk(`dp`): Calculates the jacobian G.
+    - get_z(`dp`, `aruco_r`): Calculates the measurement vector, containing [[p], [theta]].
+    - run(): Runs the node.
+
+    ## Publishers
+    - /odom: Odometry of the robot.
+    - /kalman_pose: Pose of the robot.
+    - /aruco_markers: ArUco markers seen by the camera.
+
+    ## Subscribers
+    - /wl: Angular velocity of the left wheel.
+    - /wr: Angular velocity of the right wheel.
+    - /fiducial_transforms: Fiducial poses.
+
+    ## Broadcasters
+    - /odom: Fixed odometry frame.
+    - /kalman/base_link: Base link frame.
+    """
     def __init__(self):
+        """Initializes the node, broadcasters, publishers and subscribers, and sets the initial conditions."""
         # * Initialize node
         rospy.init_node("EKF")
         self.rate = rospy.Rate(FS)
@@ -74,6 +132,12 @@ class KalmanFilter:
 
         # * Publishers
         self.pOD = rospy.Publisher("/odom", Odometry, queue_size=10)
+        self.kalman_publisher = rospy.Publisher(
+            "/kalman_pose", PoseWithCovarianceStamped, queue_size=10
+        )
+        self.markers_publisher = rospy.Publisher(
+            "/aruco_markers", MarkerArray, queue_size=10
+        )
 
         # * Transform broadcaster
         self.br = tf2_ros.TransformBroadcaster()
@@ -82,17 +146,16 @@ class KalmanFilter:
         # * Subscribers
         rospy.Subscriber("/wl", Float32, self.callback_wl)
         rospy.Subscriber("/wr", Float32, self.callback_wr)
-        #! rospy.Subscriber(
-         #   "/fiducial_transforms",
-          #  FiducialTransformArray,
-           # callback=self.callback_fiducial,
-        #)
+        rospy.Subscriber(
+           "/fiducial_transforms",
+           FiducialTransformArray,
+           callback=self.callback_fiducial,
+        )
 
         # * Publishers
         self.kalman_publisher = rospy.Publisher(
             "/kalman_pose", PoseWithCovarianceStamped, queue_size=10
         )
-        self.markers_publisher = rospy.Publisher("/aruco_markers", MarkerArray, queue_size=10)
 
         # * Load map
         with open(MAP_PATH) as f:
@@ -170,7 +233,6 @@ class KalmanFilter:
         )
         sigma_delta = np.array([[KR * abs(self.wr), 0], [0, KL * abs(self.wl)]])
         Q = np.matmul(nabla_w, np.matmul(sigma_delta, nabla_w.T))
-        #! H
         H = np.array(
             [
                 [1, 0, -T * v * np.sin(q)],
@@ -294,6 +356,7 @@ class KalmanFilter:
         )
 
     def run(self):
+        """Run the node. Estimate the pose of the robot based on the wheel velocities, then correct the pose based on all the aruco markers detected."""
         # * Initial conditions
         x, y, q = 0.0, 0.0, 0.0
         sigma = SIGMA0
@@ -307,7 +370,7 @@ class KalmanFilter:
             w = R * ((self.wr - self.wl) / L)
 
             # * Calculate the pose based on the calculated velocities and the previous pose
-            #! mu^
+            # ! mu^
             x += T * v * np.cos(q)
             y += T * v * np.sin(q)
             q += T * w
@@ -316,7 +379,7 @@ class KalmanFilter:
             qRota = tf.transformations.quaternion_from_euler(0, 0, q)
 
             # * Encoder covariance
-            #! Sigma^
+            # ! Sigma^
             sigma = self.calculate_covariance(q, v, sigma)
             covariance = self.covariance_3_to_6(sigma)
 
@@ -358,9 +421,9 @@ class KalmanFilter:
                     marker.scale.x = 0.01
                     marker.scale.y = 0.14
                     marker.scale.z = 0.14
-                    marker.color.r = 76.0/255.0
-                    marker.color.g = 185.0/255.0
-                    marker.color.b = 68.0/255.0
+                    marker.color.r = 76.0 / 255.0
+                    marker.color.g = 185.0 / 255.0
+                    marker.color.b = 68.0 / 255.0
                     marker.color.a = 1
                     marker.pose.position.x = true_aruco[0][0]
                     marker.pose.position.y = true_aruco[1][0]
@@ -409,7 +472,7 @@ class KalmanFilter:
                     q = mu[2][0]
 
                 self.markers_publisher.publish(markers)
-                
+
                 # * Correct the pose
                 pose_with_covariance_stamped.pose.pose.position.x = x
                 pose_with_covariance_stamped.pose.pose.position.y = y
