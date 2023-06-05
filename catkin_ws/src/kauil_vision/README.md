@@ -10,6 +10,8 @@ Kauil vision nodes.
 
 ## Files
 - `/src`
+  - [camera_info_publisher.py](./src/camera_info_publisher.py)
+    - Publish camera information. 
   - [image_publisher.py](./src/image_publisher.py)
     - Image publisher for Kauil's cameras.
   - [l_camera_position_listener.py](./src/l_camera_position_listener.py)
@@ -19,6 +21,8 @@ Kauil vision nodes.
 - `/launch`
   - [camera_movement.launch](./launch/camera_movement.launch)
     - Launch `/src/l_camera_position_listener.py` and `/src/r_camera_position_listener.py`
+  - [init_cameras.launch](./launch/init_cameras.launch)
+    - Initiate camera video and publish camera information.
 
 ## Requierements
 - `/src/*_camera_position_listener.py`
