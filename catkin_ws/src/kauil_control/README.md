@@ -14,8 +14,6 @@ Implementation of the nodes required to establish control on Kauil's movement.
     - [control.launch](./launch/control.launch)
       - Launches a node to manage the `/cmd_velocity` topic to move Kauil and another to read the information from Kail's encoders and publish them in `/wr` and `/wl`.
 - `/src`
-  - [encoders.ino](./src/encoders.ino)
-    - File to be uploaded to the Arduino connected to the encoders to obtain their information and transmit them as the rpm of each wheel.
   - [serial_reader.py](./src/serial_reader.py)
     - Read the rpm of each wheel transmitted by the Arduino and translate them to angular velocities. Then publish them to `/wr` and `/wl`.
   - [twist_listener.py](./src/twist_listener.py)
