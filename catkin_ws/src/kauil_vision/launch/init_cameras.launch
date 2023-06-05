@@ -1,3 +1,13 @@
+<!--
+This launch file is used to publish the camera images and camera info, as well as the compressed transport of the images.
+
+Authors:
+  - Alejandro Domínguez Lugo    (A01378028)
+  - Diego Alberto Anaya Márquez (A01379375)
+  - Nancy Lesly García Jiménez  (A01378043)
+
+Date: 2023/05/09
+-->
 <launch>
   <node pkg="kauil_vision" name="kauil_image_publisher" type="image_publisher.py"/>
   <node pkg="kauil_vision" name="camera_info_publisher" type="camera_info_publisher.py" />

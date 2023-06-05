@@ -1,3 +1,19 @@
+<!--
+Launch file for the SLAM system. It launches the following nodes:
+  - urg_node: Node that reads the data from the Hokuyo URG-04LX-UG01 laser
+    scanner.
+  - kalman: Node that performs the Extended Kalman Filter.
+  - aruco_detect: Node that detects the ArUco markers.
+  - mapper: Node that performs the SLAM algorithm.
+  - bug20: Node that performs the reactive navigation algorithm.
+
+Authors:
+  - Alejandro Domínguez Lugo    (A01378028)
+  - Diego Alberto Anaya Márquez (A01379375)
+  - Nancy Leslye García Jiménez (A01378043)
+
+Date: 2023/05/09
+-->
 <launch>
   <include file="$(find kauil_vision)/launch/init_cameras.launch"/>
   <node pkg="urg_node" name="urg_node" type="urg_node" args="H1316884"/>

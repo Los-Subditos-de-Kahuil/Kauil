@@ -118,6 +118,7 @@ class KalmanFilter:
     - /odom: Fixed odometry frame.
     - /kalman/base_link: Base link frame.
     """
+
     def __init__(self):
         """Initializes the node, broadcasters, publishers and subscribers, and sets the initial conditions."""
         # * Initialize node
@@ -147,9 +148,9 @@ class KalmanFilter:
         rospy.Subscriber("/wl", Float32, self.callback_wl)
         rospy.Subscriber("/wr", Float32, self.callback_wr)
         rospy.Subscriber(
-           "/fiducial_transforms",
-           FiducialTransformArray,
-           callback=self.callback_fiducial,
+            "/fiducial_transforms",
+            FiducialTransformArray,
+            callback=self.callback_fiducial,
         )
 
         # * Publishers

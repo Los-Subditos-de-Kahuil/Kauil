@@ -90,6 +90,7 @@ class Bug2Algorithm:
     ## Publishers
     - `/cmd_vel`: cmd_vel to control the robot
     """
+
     def __init__(self):
         """Initializes the node (with arguments), publishers and subscribers, and sets the initial values."""
         # * Arguments
@@ -139,7 +140,6 @@ class Bug2Algorithm:
 
         # * Publish to cmd_vel to control robot
         self.cmd_vel_pub = rospy.Publisher("/cmd_vel", Twist, queue_size=10)
-    
 
     def odom_callback(self, msg):
         """Callback for current x, y, and theta state
@@ -194,9 +194,10 @@ class Bug2Algorithm:
         self.c = x0 * yf - xf * y0
 
     def get_goal(self):
-        rospy.wait_for_service('get_new_goal')
+        """Gets the next goal from the service"""
+        rospy.wait_for_service("get_new_goal")
         try:
-            get_new_goal = rospy.ServiceProxy('get_new_goal', getNewGoal)
+            get_new_goal = rospy.ServiceProxy("get_new_goal", getNewGoal)
             response = get_new_goal(self.goal_x, self.goal_y)
             self.goal_x, self.goal_y = response.nx, response.ny
             if True:
@@ -204,7 +205,7 @@ class Bug2Algorithm:
                 print(self.goal_x, self.goal_y)
             self.get_line()
         except rospy.ServiceException as e:
-            print('Service call failed')
+            print("Service call failed")
 
     def get_scan_between_angles(self, start_angle, end_angle):
         """Gets the minimum scan data between two angles

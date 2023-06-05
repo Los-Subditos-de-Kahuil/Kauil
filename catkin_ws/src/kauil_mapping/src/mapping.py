@@ -49,9 +49,7 @@ class Mapper:
             Resolution of map in meter per pixel
         """
         self.scan_listener = rospy.Subscriber("/scan", LaserScan, self.scan_callback)
-        self.odom_listener = rospy.Subscriber(
-            "/odom", Odometry, self.odom_callback
-        )
+        self.odom_listener = rospy.Subscriber("/odom", Odometry, self.odom_callback)
         self.map_pub = rospy.Publisher("/map", OccupancyGrid, queue_size=1)
         self.rate = rospy.Rate(5.0)
         self.map = OccupancyGrid()

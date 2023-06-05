@@ -134,16 +134,17 @@ class BugAlgorithm:
         self.cmd_vel_pub = rospy.Publisher("/cmd_vel", Twist, queue_size=10)
 
     def get_goal(self):
-        rospy.wait_for_service('get_new_goal')
+        """Gets the next goal from the service"""
+        rospy.wait_for_service("get_new_goal")
         try:
-            get_new_goal = rospy.ServiceProxy('get_new_goal', getNewGoal)
+            get_new_goal = rospy.ServiceProxy("get_new_goal", getNewGoal)
             response = get_new_goal(self.goal_x, self.goal_y)
             self.goal_x, self.goal_y = response.nx, response.ny
             if True:
                 print("Current goal: ")
                 print(self.goal_x, self.goal_y)
         except rospy.ServiceException as e:
-            print('Service call failed')
+            print("Service call failed")
 
     def odom_callback(self, msg):
         """Callback for current x, y, and theta state

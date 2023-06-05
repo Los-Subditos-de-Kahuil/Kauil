@@ -15,6 +15,7 @@ import os
 import numpy as np
 from reactive_nav.srv import *
 
+
 def callback_function(req):
     """Given the currently reached goal, returns the next goal to reach.
 
@@ -43,6 +44,7 @@ def callback_function(req):
         i += 1
 
     return getNewGoalResponse(new_goal[0], new_goal[1])
+
 
 if __name__ == "__main__":
     try:

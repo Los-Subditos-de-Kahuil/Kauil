@@ -22,13 +22,8 @@ from std_msgs.msg import String
 # * Constants for State Machine
 DIST_THRESHOLD = 0.10  # Distance threshold to goal
 OBSTACLE_THRESHOLD = 1.3  # Distance threshold to obstacle
-<<<<<<< HEAD
-PUZZLEBOT_SIZE = 1  # Size of the robot (from xacro)
-VISION_ANGLE = np.arctan((PUZZLEBOT_SIZE / 2.0) / OBSTACLE_THRESHOLD)  # Vision angle
-=======
 ROBOT_SIZE = 1  # Size of the robot (from xacro)
 VISION_ANGLE = np.arctan((ROBOT_SIZE / 2.0) / OBSTACLE_THRESHOLD)  # Vision angle
->>>>>>> 2f040bbb441a195765b82744741744ba1d333dc9
 
 # * Constants for go to goal
 V_MAX = 0.28  # Max linear velocity
@@ -297,7 +292,7 @@ class Bug20Algorithm:
         """Calculates the angular velocity to follow a wall.
 
         Args:
-            r_1 (float): Distance to wallcatkin_ws/src/kauil_reactive_navigation/src/kauil_bug20.py on absolute right
+            r_1 (float): Distance to wall on absolute right
             theta_1 (float): Angle to wall on absolute right (in LiDAR frame)
             r_2 (float): Distance to wall on right-front
             theta_2 (float): Angle to wall on right-front (in LiDAR frame)
@@ -341,13 +336,13 @@ class Bug20Algorithm:
         """
         # * -------- Get laser scans --------
         amount_of_scans = 15
-        theta_1 = - np.pi/2 # Full right
+        theta_1 = -np.pi / 2  # Full right
         r_1 = self.get_scan_between_angles(
             theta_1 - self.scan.angle_increment * amount_of_scans,
             theta_1 + self.scan.angle_increment * amount_of_scans,
         )
 
-        theta_2 = theta_1 + (np.pi/4)  # Right-front
+        theta_2 = theta_1 + (np.pi / 4)  # Right-front
         r_2 = min(
             self.get_scan_between_angles(
                 theta_2 - self.scan.angle_increment * amount_of_scans,
@@ -358,9 +353,9 @@ class Bug20Algorithm:
 
         if r_2 == MAX_WALL_DISTANCE:
             rospy.logerr("No wall right-front")
-catkin_ws/src/kauil_reactive_navigation/src/kauil_bug20.py
+
         distance_ahead = self.get_scan_between_angles(
-        - self.scan.angle_increment * 15, self.scan.angle_increment * 15
+            -self.scan.angle_increment * 15, self.scan.angle_increment * 15
         )
         # * ---------------------------------
         no_obstacle_right = r_1 > OBSTACLE_THRESHOLD
@@ -420,7 +415,7 @@ catkin_ws/src/kauil_reactive_navigation/src/kauil_bug20.py
             if self.scan is not None:  # Only move if scan is available
                 self.goal_pub.publish(str(self.goal_x) + " " + str(self.goal_y))
                 if self.verbose:
-      catkin_ws/src/kauil_reactive_navigation/src/kauil_bug20.py              rospy.logwarn("")  # For spacing each iteration
+                    rospy.logwarn("")  # For spacing each iteration
 
                 obstacle_in_front_distance = self.get_scan_between_angles(
                     -VISION_ANGLE, VISION_ANGLE
@@ -430,11 +425,12 @@ catkin_ws/src/kauil_reactive_navigation/src/kauil_bug20.py
                     theta_1 - self.scan.angle_increment * 10,
                     theta_1 + self.scan.angle_increment * 10,
                 )
-                theta_1 = - np.pi/2
-                obstacle_in_right_distance = self.get_scan_between_angles(theta_1 - self.scan.angle_increment * 10, theta_1 + self.scan.angle_increment * 10)
 
                 if self.state == "GO_TO_GOAL":
-                    if obstacle_in_front_distance <= OBSTACLE_THRESHOLD or obstacle_in_right_distance <= OBSTACLE_THRESHOLD:
+                    if (
+                        obstacle_in_front_distance <= OBSTACLE_THRESHOLD
+                        or obstacle_in_right_distance <= OBSTACLE_THRESHOLD
+                    ):
                         self.state = "GO_AROUND_OBSTACLE"
                     else:
                         self.go_to_goal()
