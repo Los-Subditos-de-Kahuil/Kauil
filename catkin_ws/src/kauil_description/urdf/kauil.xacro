@@ -1,0 +1,301 @@
+<?xml version="1.0" ?>
+<robot name="kauil" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+<xacro:include filename="$(find kauil_description)/urdf/materials.xacro" />
+<xacro:include filename="$(find kauil_description)/urdf/kauil.trans" />
+<xacro:include filename="$(find kauil_description)/urdf/kauil.gazebo" />
+
+<link name="base_link">
+  <inertial>
+    <origin xyz="-0.45184061039957457 0.07053579191525028 0.13475665355011454" rpy="0 0 0"/>
+    <mass value="80.80574484823813"/>
+    <inertia ixx="3.802514" iyy="2.09351" izz="4.198797" ixy="6e-05" iyz="-0.082735" ixz="0.001944"/>
+  </inertial>
+  <visual>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://kauil_description/meshes/base_link.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver"/>
+  </visual>
+  <collision>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://kauil_description/meshes/base_link.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="hokuyo_kauil">
+  <inertial>
+    <origin xyz="-7.907285083930127e-06 -4.5815673804794343e-07 0.043509011415941184" rpy="0 0 0"/>
+    <mass value="2.7843842894799824"/>
+    <inertia ixx="0.002961" iyy="0.002961" izz="0.00174" ixy="-0.0" iyz="0.0" ixz="1e-06"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.457172 -0.248805 -0.163314" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://kauil_description/meshes/hokuyo_kauil_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="steel"/>
+  </visual>
+  <collision>
+    <origin xyz="0.457172 -0.248805 -0.163314" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://kauil_description/meshes/hokuyo_kauil_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="l_wheel">
+  <inertial>
+    <origin xyz="-0.030000210318581133 -7.825685867210788e-05 1.7745199099028497e-07" rpy="0 0 0"/>
+    <mass value="4.059067721177586"/>
+    <inertia ixx="0.016884" iyy="0.009874" izz="0.009874" ixy="1.8e-05" iyz="0.0" ixz="-0.0"/>
+  </inertial>
+  <collision>
+    <origin xyz="0.717725 -0.020554 -0.03763" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://kauil_description/meshes/l_wheel_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="r_wheel">
+  <inertial>
+    <origin xyz="0.031250308371784385 8.179032554830185e-05 2.0163889000168744e-07" rpy="0 0 0"/>
+    <mass value="4.059067570781879"/>
+    <inertia ixx="0.016884" iyy="0.009874" izz="0.009874" ixy="1.8e-05" iyz="-0.0" ixz="-0.0"/>
+  </inertial>
+  <collision>
+    <origin xyz="0.245577 -0.021658 -0.039639" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://kauil_description/meshes/r_wheel_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="r_foscam">
+  <inertial>
+    <origin xyz="-0.0006851911671404143 0.003714437115197672 0.08706168842929718" rpy="0 0 0"/>
+    <mass value="1.5627520666954997"/>
+    <inertia ixx="-0.003151" iyy="-0.001799" izz="-0.000633" ixy="-5e-06" iyz="0.002092" ixz="-1e-06"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.238631 -0.11116 -0.370604" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://kauil_description/meshes/r_foscam_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="nylon"/>
+  </visual>
+  <collision>
+    <origin xyz="0.238631 -0.11116 -0.370604" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://kauil_description/meshes/r_foscam_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="l_foscam">
+  <inertial>
+    <origin xyz="-0.0006854185479012731 0.0037144597494188497 0.08706168842929718" rpy="0 0 0"/>
+    <mass value="1.5627520666954997"/>
+    <inertia ixx="-0.003151" iyy="-0.001799" izz="-0.000633" ixy="-5e-06" iyz="0.002092" ixz="-1e-06"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.671366 -0.113543 -0.370604" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://kauil_description/meshes/l_foscam_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="nylon"/>
+  </visual>
+  <collision>
+    <origin xyz="0.671366 -0.113543 -0.370604" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://kauil_description/meshes/l_foscam_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<joint name="hokuyo_joint" type="fixed">
+  <origin xyz="-0.457172 0.248805 0.163314" rpy="0 0 0"/>
+  <parent link="base_link"/>
+  <child link="hokuyo_kauil"/>
+</joint>
+
+<joint name="l_wheel_joint" type="continuous">
+  <origin xyz="-0.717725 0.020554 0.03763" rpy="0 0 0"/>
+  <parent link="base_link"/>
+  <child link="l_wheel"/>
+  <axis xyz="-0.999997 -0.002619 0.0"/>
+</joint>
+
+<joint name="r_wheel_joint" type="continuous">
+  <origin xyz="-0.245577 0.021658 0.039639" rpy="0 0 0"/>
+  <parent link="base_link"/>
+  <child link="r_wheel"/>
+  <axis xyz="-0.999997 -0.002619 -0.0"/>
+</joint>
+
+<joint name="r_foscam_joint" type="fixed">
+  <origin xyz="-0.238631 0.11116 0.370604" rpy="0 0 0"/>
+  <parent link="base_link"/>
+  <child link="r_foscam"/>
+</joint>
+
+<joint name="l_foscam_joint" type="fixed">
+  <origin xyz="-0.671366 0.113543 0.370604" rpy="0 0 0"/>
+  <parent link="base_link"/>
+  <child link="l_foscam"/>
+</joint>
+
+<gazebo>
+  <plugin name="differential_drive_controller" filename="libgazebo_ros_diff_drive.so">
+    <robotNamespace />
+    <alwaysOn>true</alwaysOn>
+    <use_sim_time>true</use_sim_time>
+    <updateRate>500</updateRate>
+    <legacyMode>false</legacyMode>
+    <leftJoint>l_wheel_joint</leftJoint>
+    <rightJoint>r_wheel_joint</rightJoint>
+    <wheelSeparation>0.5380</wheelSeparation>
+    <wheelDiameter>0.19</wheelDiameter>
+    <torque>500</torque>
+    <commandTopic>cmd_vel</commandTopic>
+    <odometryTopic>odom</odometryTopic>
+    <odometryFrame>odom</odometryFrame>
+    <robotBaseFrame>base_link</robotBaseFrame>
+    <publishWheelTF>false</publishWheelTF>
+    <publishWheelJointState>false</publishWheelJointState>
+    <rosDebugLevel>na</rosDebugLevel>
+    <wheelAcceleration>0</wheelAcceleration>
+    <wheelTorque>500</wheelTorque>
+    <odometrySource>world</odometrySource>
+    <publishTf>1</publishTf>
+    <publishOdomTF>true</publishOdomTF>
+  </plugin>
+</gazebo>
+
+<!-- hokuyo -->
+<gazebo reference="hokuyo_kauil">
+  <sensor type="gpu_ray" name="head_hokuyo_sensor">
+    <pose>0 0 0 0 0 0</pose>
+    <visualize>false</visualize>
+    <update_rate>40</update_rate>
+    <use_sim_time>true</use_sim_time>
+    <ray>
+      <scan>
+        <horizontal>
+          <samples>720</samples>
+          <resolution>1</resolution>
+          <min_angle>-1.570796</min_angle>
+          <max_angle>1.570796</max_angle>
+        </horizontal>
+      </scan>
+      <range>
+        <min>0.10</min>
+        <max>30.0</max>
+        <resolution>0.01</resolution>
+      </range>
+      <noise>
+        <type>gaussian</type>
+        <!-- Noise parameters based on published spec for Hokuyo laser
+              achieving "+-30mm" accuracy at range < 10m.  A mean of 0.0m and
+              stddev of 0.01m will put 99.7% of samples within 0.03m of the true
+              reading. -->
+        <mean>0.0</mean>
+        <stddev>0.01</stddev>
+      </noise>
+    </ray>
+    <plugin name="gazebo_ros_head_hokuyo_controller" filename="libgazebo_ros_gpu_laser.so">
+      <topicName>/kauil/laser/scan</topicName>
+      <frameName>hokuyo_link</frameName>
+    </plugin>
+  </sensor>
+</gazebo>
+
+<!-- camera -->
+<gazebo reference="r_foscam">
+  <sensor type="camera" name="r_foscam">
+    <update_rate>30.0</update_rate>
+    <use_sim_time>true</use_sim_time>
+    <camera name="head">
+      <horizontal_fov>1.3962634</horizontal_fov>
+      <image>
+        <width>800</width>
+        <height>800</height>
+        <format>R8G8B8</format>
+      </image>
+      <clip>
+        <near>0.02</near>
+        <far>300</far>
+      </clip>
+      <noise>
+        <type>gaussian</type>
+        <!-- Noise is sampled independently per pixel on each frame.
+              That pixel's noise value is added to each of its color
+              channels, which at that point lie in the range [0,1]. -->
+        <mean>0.0</mean>
+        <stddev>0.007</stddev>
+      </noise>
+    </camera>
+    <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
+      <alwaysOn>true</alwaysOn>
+      <updateRate>0.0</updateRate>
+      <cameraName>kauil/r_foscam</cameraName>
+      <imageTopicName>image_raw</imageTopicName>
+      <cameraInfoTopicName>camera_info</cameraInfoTopicName>
+      <frameName>camera_link</frameName>
+      <hackBaseline>0.07</hackBaseline>
+      <distortionK1>0.0</distortionK1>
+      <distortionK2>0.0</distortionK2>
+      <distortionK3>0.0</distortionK3>
+      <distortionT1>0.0</distortionT1>
+      <distortionT2>0.0</distortionT2>
+    </plugin>
+  </sensor>
+</gazebo>
+
+<!-- camera -->
+<gazebo reference="l_foscam">
+  <sensor type="camera" name="l_foscam">
+    <update_rate>30.0</update_rate>
+    <use_sim_time>true</use_sim_time>
+    <camera name="head">
+      <horizontal_fov>1.3962634</horizontal_fov>
+      <image>
+        <width>800</width>
+        <height>800</height>
+        <format>R8G8B8</format>
+      </image>
+      <clip>
+        <near>0.02</near>
+        <far>300</far>
+      </clip>
+      <noise>
+        <type>gaussian</type>
+        <!-- Noise is sampled independently per pixel on each frame.
+              That pixel's noise value is added to each of its color
+              channels, which at that point lie in the range [0,1]. -->
+        <mean>0.0</mean>
+        <stddev>0.007</stddev>
+      </noise>
+    </camera>
+    <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
+      <alwaysOn>true</alwaysOn>
+      <updateRate>0.0</updateRate>
+      <cameraName>kauil/l_foscam</cameraName>
+      <imageTopicName>image_raw</imageTopicName>
+      <cameraInfoTopicName>camera_info</cameraInfoTopicName>
+      <frameName>camera_link</frameName>
+      <hackBaseline>0.07</hackBaseline>
+      <distortionK1>0.0</distortionK1>
+      <distortionK2>0.0</distortionK2>
+      <distortionK3>0.0</distortionK3>
+      <distortionT1>0.0</distortionT1>
+      <distortionT2>0.0</distortionT2>
+    </plugin>
+  </sensor>
+</gazebo>
+
+</robot>
